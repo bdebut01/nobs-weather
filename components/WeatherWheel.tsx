@@ -1,23 +1,20 @@
+import { NobsWeather } from "@/types/nobsWeather";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Svg, { Circle, Line, G, Text as SvgText, Path } from "react-native-svg";
+// import SvgImage from "react-native-svg/lib/typescript/elements/Image";
+import { Image as SvgImage } from "react-native-svg";
 
 interface WeatherWheelProps {
-  location: string;
-  data: {
-    currentIcon: string;
-    currentTemp: number;
-    currentUV: number;
-    aqi: number;
-    nextTemp: number;
-    nextUV: number;
-  };
+  data: NobsWeather;
 }
 
-const WeatherWheel: React.FC<WeatherWheelProps> = ({ location, data }) => {
+const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
   const size = 180; // Diameter of wheel: min-width of 180px, max-width of 360px
   const center = size / 2;
   const radius = size / 2 - 20;
+
+  console.log(data);
 
   const createSlicePath = (startAngle: number, endAngle: number) => {
     const startX = center + radius * Math.cos(startAngle);
@@ -35,14 +32,18 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ location, data }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.location}>{location}</Text>
+      <Text style={styles.location}>{data.name}</Text>
       <Svg width={size} height={size}>
         <G transform={`rotate(45, ${center}, ${center})`}>
           {/* Outer Circle */}
           <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="none" />
 
           {/* North */}
-          <Path d={createSlicePath(-Math.PI, -Math.PI / 2)} fill="rgba(0, 145, 255, 0.2)" />
+          <Path
+            d={createSlicePath(-Math.PI, -Math.PI / 2)}
+            fill="white"
+            // fill="rgba(0, 145, 255, 0.2)"
+          />
           {/* NE */}
           <Path d={createSlicePath(-Math.PI / 2, -Math.PI / 4)} fill="rgba(255, 0, 0, 0.2)" />
           {/* SE */}
@@ -50,7 +51,8 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ location, data }) => {
           {/* South */}
           <Path
             d={createSlicePath(0, Math.PI / 2)} // South
-            fill="rgba(225, 157, 12, 0.46)"
+            // fill="rgba(0, 145, 255, 0.2)"
+            fill="white"
           />
           {/* SW */}
           <Path
@@ -79,12 +81,18 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ location, data }) => {
           <Line x1={center} y1={center} x2={center + radius} y2={center} stroke="black" strokeWidth={3} />
           <Line x1={center} y1={center} x2={center} y2={center - radius} stroke="black" strokeWidth={3} />
         </G>
-
         {/* North Slice */}
-        <SvgText x={center} y={center - radius / 2} fontSize={36} textAnchor="middle" fill="black">
-          {data.currentIcon}
-        </SvgText>
-        {/* NE Slice */}
+        {/* <SvgText x={center} y={center - radius / 2} fontSize={36} textAnchor="middle" fill="black">
+          {data.icon}
+        </SvgText> */}
+        <SvgImage
+          x={center - 32} // Center the image horizontally
+          y={center - radius / 2 - 32} // Position vertically at the North slice
+          width={64} // Icon width
+          height={64} // Icon height
+          href={{ uri: `https:${data.icon}` }} // Add 'https:' to the icon URL
+        />
+        ;{/* NE Slice */}
         <SvgText x={center + center / 2} y={center - radius / 6} fontSize={18} textAnchor="middle" fill="black">
           {data.nextTemp}°
         </SvgText>
@@ -98,11 +106,11 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ location, data }) => {
         </SvgText>
         {/* South Slice */}
         <SvgText x={center} y={center + radius / 2 + 15} fontSize={24} textAnchor="middle" fill="black">
-          {data.currentTemp}°
+          {data.temp}°
         </SvgText>
         {/* SW Slice */}
         <SvgText x={center / 2} y={center + radius / 3} fontSize={21} textAnchor="middle" fill="black">
-          {data.currentUV}
+          {data.uv}
         </SvgText>
       </Svg>
     </View>
