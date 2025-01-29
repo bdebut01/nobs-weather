@@ -1,4 +1,4 @@
-import { NobsWeather } from "@/types/nobsWeather";
+import { NobsWeather } from "@/types/NobsWeather";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Svg, { Circle, Line, G, Text as SvgText, Path } from "react-native-svg";
@@ -32,11 +32,11 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.location}>{data.name}</Text>
+      <Text style={styles.title}>{data.name}</Text>
       <Svg width={size} height={size}>
         <G transform={`rotate(45, ${center}, ${center})`}>
           {/* Outer Circle */}
-          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="none" />
+          {/* <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="none" /> */}
 
           {/* North */}
           <Path
@@ -81,10 +81,6 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
           <Line x1={center} y1={center} x2={center + radius} y2={center} stroke="black" strokeWidth={3} />
           <Line x1={center} y1={center} x2={center} y2={center - radius} stroke="black" strokeWidth={3} />
         </G>
-        {/* North Slice */}
-        {/* <SvgText x={center} y={center - radius / 2} fontSize={36} textAnchor="middle" fill="black">
-          {data.icon}
-        </SvgText> */}
         <SvgImage
           x={center - 32} // Center the image horizontally
           y={center - radius / 2 - 32} // Position vertically at the North slice
@@ -123,10 +119,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  location: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+  title: {
+    fontSize: 48,
+    fontFamily: "SixtyfourConvergence-Regular",
   },
 });
 

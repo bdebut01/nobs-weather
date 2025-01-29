@@ -1,7 +1,7 @@
 import { Pollutant } from "@/types/AQIPollutant";
 import { calculateAQI } from "./calculateAQI";
 import { WeatherAPICurrent } from "@/types/weatherapi/WeatherAPICurrent";
-import { NobsWeather } from "@/types/nobsWeather";
+import { NobsWeather } from "@/types/NobsWeather";
 
 export const transformCurrentWeather = (data: WeatherAPICurrent): NobsWeather | undefined => {
   // Bail if data is empty object
@@ -20,15 +20,14 @@ export const transformCurrentWeather = (data: WeatherAPICurrent): NobsWeather | 
   };
 
   let maxAQI = 0;
-  let mainPollutant: Pollutant = "pm25";
+  //   let mainPollutant: Pollutant = "pm25";
   for (const [pollutant, concentration] of Object.entries(pollutantData)) {
     const aqi = calculateAQI(pollutant as Pollutant, concentration);
     if (aqi > maxAQI) {
       maxAQI = aqi;
-      mainPollutant = pollutant as Pollutant;
+      //   mainPollutant = pollutant as Pollutant;
     }
   }
-  console.log(`Main pollutant: ${mainPollutant}, AQI: ${maxAQI}`);
 
   return {
     name: data.location.name, // tood: duplicate city names in user storage, append region/state

@@ -6,11 +6,12 @@ import { LatLong } from "@/types/LatLong";
 import { weatherService } from "@/services/api/weatherService";
 import { useEffect, useState } from "react";
 import { transformCurrentWeather } from "@/services/api/transformers/transformCurrentWeather";
-import { NobsWeather } from "@/types/nobsWeather";
+import { NobsWeather } from "@/types/NobsWeather";
+import { getLoadedFonts } from "expo-font";
 
 export default function Index() {
   const [rawData, setRawData] = useState<NobsWeather | undefined>(undefined);
-  // TODO: fetch weather data from API
+  // TODO: fetch location from API or storage
   const location: LatLong = {
     lat: 29.6516,
     lon: -82.3248,
@@ -24,6 +25,7 @@ export default function Index() {
     getData().then((data) => {
       setRawData(transformCurrentWeather(data));
     });
+    console.log(getLoadedFonts());
   }, []);
 
   return (
