@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "nobs.weather",
-    "slug": "nobs.weather",
+    "name": "nobs-weather",
+    "slug": "nobs-weather",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -38,7 +38,7 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/SpaceMono-Regular.ttf", "assets/fonts/SixtyfourConvergence-Regular.ttf"]
+          "fonts": ["./assets/fonts/SpaceMono-Regular.ttf", "./assets/fonts/SixtyfourConvergence-Regular.ttf", "./assets/fonts/AlumniSansPinstripe-Regular.ttf"]
         }
       ]
     ],

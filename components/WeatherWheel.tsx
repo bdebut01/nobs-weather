@@ -1,20 +1,39 @@
 import { NobsWeather } from "@/types/NobsWeather";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Svg, { Circle, Line, G, Text as SvgText, Path } from "react-native-svg";
-// import SvgImage from "react-native-svg/lib/typescript/elements/Image";
+import Svg, { Circle, Line, G, Path, RadialGradient, Defs, Stop } from "react-native-svg";
 import { Image as SvgImage } from "react-native-svg";
 
 interface WeatherWheelProps {
   data: NobsWeather;
 }
 
+const WHEEL_FILL_COLORS = {
+  // icon: "#EBE1D5", // tan, shades of soft green blue
+  // temp: "#AD9082",
+  // uv: "#98A8A2",
+  // aqi: "#61788C",
+  next: "rgba(0, 0, 0, 0)",
+  icon: "#DAE6D6",
+  temp: "#9ac1d0",
+  uv: "#89a666",
+  aqi: "#DAE6D6",
+  nextUV: "#2f591c",
+  nextTemp: "#4f729a",
+  // next: "#2B91AD",
+  start: "#ffffff",
+  end: "#69bf9a", // mint green
+  // end: "#4e7ba6",
+  nextStart: "#ffffff",
+  nextEnd: "#4c5059",
+};
+
 const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
   const size = 180; // Diameter of wheel: min-width of 180px, max-width of 360px
   const center = size / 2;
   const radius = size / 2 - 20;
 
-  console.log(data);
+  // console.log(data);
 
   const createSlicePath = (startAngle: number, endAngle: number) => {
     const startX = center + radius * Math.cos(startAngle);
@@ -36,34 +55,81 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
       <Svg width={size} height={size}>
         <G transform={`rotate(45, ${center}, ${center})`}>
           {/* Outer Circle */}
-          {/* <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="none" /> */}
+          <Defs>
+            {/* Radial Gradient for Next Slice */}
+            <RadialGradient id="nextGradient" cx="0%" cy="100%" r="200%">
+              <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.nextStart} />
+              <Stop offset="100%" stopColor={WHEEL_FILL_COLORS.nextEnd} />
+            </RadialGradient>
 
-          {/* North */}
+            {/* Radial Gradient for Current Slice */}
+            <RadialGradient id="currentGradient" cx="50%" cy="50%" r="100%">
+              <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.start} />
+              <Stop offset="80%" stopColor={WHEEL_FILL_COLORS.end} />
+            </RadialGradient>
+          </Defs>
+
+          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="white" />
+
+          {/* North: Current Icon */}
           <Path
             d={createSlicePath(-Math.PI, -Math.PI / 2)}
-            fill="white"
+            fill={WHEEL_FILL_COLORS.icon}
             // fill="rgba(0, 145, 255, 0.2)"
           />
-          {/* NE */}
-          <Path d={createSlicePath(-Math.PI / 2, -Math.PI / 4)} fill="rgba(255, 0, 0, 0.2)" />
-          {/* SE */}
-          <Path d={createSlicePath(-Math.PI / 4, 0)} fill="rgba(0, 255, 0, 0.2)" />
-          {/* South */}
+
+          {/* NE: Next Temp */}
+          {/* <Path d={createSlicePath(-Math.PI / 2, -Math.PI / 4)} fill={WHEEL_FILL_COLORS.temp} />
+          {/* SE: Next UV */}
+          {/* <Path d={createSlicePath(-Math.PI / 4, 0)} fill={WHEEL_FILL_COLORS.uv} /> */}
+          <Path d={createSlicePath(-Math.PI / 2, -Math.PI / 4)} fill={WHEEL_FILL_COLORS.nextTemp} />
+          {/* SE: Next UV */}
+          <Path d={createSlicePath(-Math.PI / 4, 0)} fill={WHEEL_FILL_COLORS.nextUV} />
+          {/* Next slice overlay (to allow darkening) */}
+          {/* <Path d={createSlicePath(-Math.PI / 2, 0)} fill={WHEEL_FILL_COLORS.next} /> */}
+
+          {/* South: Current Temp */}
+          {/* <Path
+            d={createSlicePath(0, Math.PI / 2)} // South
+            fill={WHEEL_FILL_COLORS.temp}
+          /> */}
           <Path
             d={createSlicePath(0, Math.PI / 2)} // South
-            // fill="rgba(0, 145, 255, 0.2)"
-            fill="white"
+            fill={WHEEL_FILL_COLORS.aqi}
           />
-          {/* SW */}
+
+          {/* SW: Current UV */}
           <Path
             d={createSlicePath(Math.PI / 2, (3 * Math.PI) / 4)} // SW
-            fill="rgba(255, 0, 255, 0.2)"
+            fill={WHEEL_FILL_COLORS.uv}
           />
-          {/* NW */}
+          {/* NW: Current AQI */}
+          {/* <Path
+            d={createSlicePath((3 * Math.PI) / 4, Math.PI)} // NW
+            fill={WHEEL_FILL_COLORS.aqi}
+          /> */}
           <Path
             d={createSlicePath((3 * Math.PI) / 4, Math.PI)} // NW
-            fill="rgba(0, 255, 255, 0.2)"
+            fill={WHEEL_FILL_COLORS.temp}
           />
+
+          {/* <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="url(#currentGradient)" /> */}
+
+          {/* Mess around with current gradient */}
+          {/* <Path
+            d={`
+              M ${center},${center}
+              L ${center + radius * Math.cos(-Math.PI / 2)},${center + radius * Math.sin(-Math.PI / 2)}
+              A ${radius},${radius} 0 0,1 ${center + radius * Math.cos(0)},${center + radius * Math.sin(0)}
+              A ${radius},${radius} 0 0,1 ${center + radius * Math.cos(Math.PI / 2)},${center + radius * Math.sin(Math.PI / 2)}
+              A ${radius},${radius} 0 0,1 ${center + radius * Math.cos(Math.PI)},${center + radius * Math.sin(Math.PI)}
+              A ${radius},${radius} 0 0,1 ${center + radius * Math.cos((3 * Math.PI) / 2)},${center + radius * Math.sin((3 * Math.PI) / 2)}
+              Z
+            `}
+            fill={"url(#currentGradient)"}
+          /> */}
+
+          {/* <Path d={createSlicePath(-Math.PI / 2, 0)} fill={"url(#nextGradient)"} /> */}
 
           {/* Vertical Divider */}
           <Line x1={center} y1={center - radius} x2={center} y2={center + radius} stroke="black" strokeWidth={1} />
@@ -83,31 +149,28 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
         </G>
         <SvgImage
           x={center - 32} // Center the image horizontally
-          y={center - radius / 2 - 32} // Position vertically at the North slice
+          y={center - radius} // Position vertically at the North slice
           width={64} // Icon width
           height={64} // Icon height
           href={{ uri: `https:${data.icon}` }} // Add 'https:' to the icon URL
         />
-        ;{/* NE Slice */}
-        <SvgText x={center + center / 2} y={center - radius / 6} fontSize={18} textAnchor="middle" fill="black">
-          {data.nextTemp}°
-        </SvgText>
-        {/* SE Slice */}
-        <SvgText x={center + center / 2} y={center + radius / 3} fontSize={18} textAnchor="middle" fill="black">
-          {data.nextUV}
-        </SvgText>
-        {/* NW Slice */}
-        <SvgText x={center / 2} y={center - radius / 6} fontSize={21} textAnchor="middle" fill="black">
-          {data.aqi}
-        </SvgText>
-        {/* South Slice */}
-        <SvgText x={center} y={center + radius / 2 + 15} fontSize={24} textAnchor="middle" fill="black">
-          {data.temp}°
-        </SvgText>
-        {/* SW Slice */}
-        <SvgText x={center / 2} y={center + radius / 3} fontSize={21} textAnchor="middle" fill="black">
-          {data.uv}
-        </SvgText>
+
+        {/* NE Slice: Next Temperature */}
+        <Text style={[styles.wheelText, styles.nextData, { top: center - radius / 2.5, left: center + center / 2.8 }]}>{data.nextTemp}°</Text>
+
+        {/* SE Slice: Next UV */}
+        <Text style={[styles.wheelText, styles.wheelUV, styles.nextData, { top: center + radius / 6, left: center + center / 2.5 }]}>{data.nextUV}</Text>
+
+        {/* South Slice: Current Temperature */}
+        {/* <Text style={[styles.wheelText, { top: center + radius / 2.5, left: center - 15, fontSize: 24 }]}>{data.temp}°</Text> */}
+        <Text style={[styles.wheelText, styles.wheelAQI, { top: center + radius / 2.5, left: center - 15, fontSize: 24 }]}>{data.aqi}</Text>
+
+        {/* SW Slice: Current UV */}
+        <Text style={[styles.wheelText, styles.wheelUV, { top: center + radius / 6, right: center + center / 2.5 }]}>{data.uv}</Text>
+
+        {/* NW Slice: Current AQI */}
+        {/* <Text style={[styles.wheelText, styles.wheelAQI, { top: center - radius / 2.5, right: center + center / 2.8 }]}>{data.aqi}</Text> */}
+        <Text style={[styles.wheelText, { top: center - radius / 2.5, right: center + center / 3 }]}>{data.temp}°</Text>
       </Svg>
     </View>
   );
@@ -120,8 +183,25 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 48,
+    fontSize: 36,
+  },
+  wheelText: {
+    position: "absolute",
+    fontSize: 18,
+    color: "black",
+    fontWeight: "bold",
+  },
+  wheelUV: {
     fontFamily: "SixtyfourConvergence-Regular",
+    // color: "#2B91AD",
+  },
+  wheelAQI: {
+    fontFamily: "AlumniSansPinstripe-Regular",
+  },
+  nextData: {
+    color: "white",
+    // Give slightly darker overlay
+    // backgroundColor: "rgba(0, 0, 0, 0.2)",
   },
 });
 

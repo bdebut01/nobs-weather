@@ -23,10 +23,8 @@
 
 - (NSURL *)bundleURL
 {
-  
 #if DEBUG
-  // change localhost to 127.0.0.1
-  return [NSURL URLWithString:@"http://127.0.0.1:8081/index.bundle?platform=ios&dev=true"];
+  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@".expo/.virtual-metro-entry"];
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
