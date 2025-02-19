@@ -1,5 +1,6 @@
 import { LatLong } from "@/types/LatLong";
 import citiesData from "@/assets/data/us-cities.json";
+import timezoneMap from "@/assets/data/timezone-map.json";
 
 export interface City {
   name: string;
@@ -7,8 +8,6 @@ export interface City {
   location: LatLong;
   timezone: string;
 }
-
-const CITY_DATA_FILEPATH = "assets/data/us-cities.json";
 
 /**
  * For now, cities are stored in a JSON file so are only processed into usable objects in here. In the future, this could be replaced with a call to an API.
@@ -19,12 +18,12 @@ export const cityService = async (): Promise<City[]> => {
   for (const city of citiesData) {
     cities.push({
       name: city.name,
-      stateAbbr: city["admin1"],
+      stateAbbr: city.state,
       location: {
-        lat: city.latitude,
-        lon: city.longitude,
+        lat: city.lat,
+        lon: city.lon,
       },
-      timezone: city.timezone,
+      timezone: timezoneMap[city.tz],
     });
   }
   return cities;

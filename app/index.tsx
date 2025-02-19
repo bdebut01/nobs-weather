@@ -9,10 +9,6 @@ export default function Index() {
   const [cities, setCities] = useState<City[]>([]);
 
   // fetch all user data and create grid of NobsLocations
-  const location: LatLong = {
-    lat: 29.632886070164513,
-    lon: -82.39023208593309,
-  };
 
   // fetch cities from API
   useEffect(() => {
@@ -28,7 +24,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <NobsLocation city={cities[0]} />
+      <NobsLocation city={cities[6]} />
     </View>
   );
 }
