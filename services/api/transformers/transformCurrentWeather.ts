@@ -32,10 +32,11 @@ export const transformCurrentWeather = (data: WeatherAPICurrent): NobsWeather | 
   return {
     name: data.location.name, // tood: duplicate city names in user storage, append region/state
     icon: data.current.condition.icon,
-    temp: Math.round(data.current.feelslike_f),
+    // temp: Math.round(data.current.feelslike_f),
+    temp: 0,
     uv: Math.round(data.current.uv),
     aqi: maxAQI,
-    nextTemp: 75, // todo
-    nextUV: 3, // todo
+    nextTemp: "-", // todo
+    nextUV: "-", // todo
   };
 };

@@ -1,37 +1,34 @@
-import { Link } from "expo-router";
-import WeatherWheel from "@/components/WeatherWheel";
-import { View, Text, StyleSheet } from "react-native";
-import { WeatherLocation } from "@/types/WeatherLocation";
+import { View, StyleSheet } from "react-native";
+
+import { NobsLocation } from "@/components/NobsLocation";
 import { LatLong } from "@/types/LatLong";
-import { weatherService } from "@/services/api/weatherService";
+import { City, cityService } from "@/services/api/cityService";
 import { useEffect, useState } from "react";
-import { transformCurrentWeather } from "@/services/api/transformers/transformCurrentWeather";
-import { NobsWeather } from "@/types/NobsWeather";
-import { getLoadedFonts } from "expo-font";
 
 export default function Index() {
-  const [rawData, setRawData] = useState<NobsWeather | undefined>(undefined);
-  // TODO: fetch location from API or storage
+  const [cities, setCities] = useState<City[]>([]);
+
+  // fetch all user data and create grid of NobsLocations
   const location: LatLong = {
-    lat: 29.6516,
-    lon: -82.3248,
+    lat: 29.632886070164513,
+    lon: -82.39023208593309,
   };
 
-  const getData = async () => {
-    return weatherService(location);
-  };
-
+  // fetch cities from API
   useEffect(() => {
-    getData().then((data) => {
-      setRawData(transformCurrentWeather(data));
+    cityService().then((data) => {
+      setCities(data);
+      console.log("set cities data");
     });
-    console.log(getLoadedFonts());
   }, []);
+
+  if (cities.length === 0) {
+    return <View style={styles.container} />;
+  }
 
   return (
     <View style={styles.container}>
-      {rawData != undefined && <WeatherWheel data={rawData} />}
-      {rawData === undefined && <Text>Loading...</Text>}
+      <NobsLocation city={cities[0]} />
     </View>
   );
 }
@@ -41,5 +38,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#CEECF2",
   },
 });

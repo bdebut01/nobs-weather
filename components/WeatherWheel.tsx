@@ -1,7 +1,7 @@
 import { NobsWeather } from "@/types/NobsWeather";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Svg, { Circle, Line, G, Path, RadialGradient, Defs, Stop } from "react-native-svg";
+import Svg, { Circle, Line, G, Path, RadialGradient, Defs, Stop, Filter, FeOffset, FeGaussianBlur, FeMerge, FeMergeNode } from "react-native-svg";
 import { Image as SvgImage } from "react-native-svg";
 
 interface WeatherWheelProps {
@@ -14,10 +14,10 @@ const WHEEL_FILL_COLORS = {
   // uv: "#98A8A2",
   // aqi: "#61788C",
   next: "rgba(0, 0, 0, 0)",
-  icon: "#DAE6D6",
+  icon: "#D9ECFF",
   temp: "#9ac1d0",
   uv: "#89a666",
-  aqi: "#DAE6D6",
+  aqi: "#D9ECFF",
   nextUV: "#2f591c",
   nextTemp: "#4f729a",
   // next: "#2B91AD",
@@ -32,6 +32,7 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
   const size = 180; // Diameter of wheel: min-width of 180px, max-width of 360px
   const center = size / 2;
   const radius = size / 2 - 20;
+  const iconSize = 55;
 
   // console.log(data);
 
@@ -51,7 +52,6 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{data.name}</Text>
       <Svg width={size} height={size}>
         <G transform={`rotate(45, ${center}, ${center})`}>
           {/* Outer Circle */}
@@ -67,9 +67,19 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
               <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.start} />
               <Stop offset="80%" stopColor={WHEEL_FILL_COLORS.end} />
             </RadialGradient>
+
+            {/* Drop Shadow Filter */}
+            <Filter id="shadow">
+              <FeOffset dx="2" dy="2" result="offset" />
+              <FeGaussianBlur in="offset" stdDeviation="5" result="blurred" />
+              <FeMerge>
+                <FeMergeNode in="blurred" />
+                <FeMergeNode in="SourceGraphic" />
+              </FeMerge>
+            </Filter>
           </Defs>
 
-          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="white" />
+          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={0} fill="black" filter="url(#shadow)" />
 
           {/* North: Current Icon */}
           <Path
@@ -127,9 +137,9 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
               Z
             `}
             fill={"url(#currentGradient)"}
-          /> */}
+          />
 
-          {/* <Path d={createSlicePath(-Math.PI / 2, 0)} fill={"url(#nextGradient)"} /> */}
+          <Path d={createSlicePath(-Math.PI / 2, 0)} fill={"url(#nextGradient)"} /> */}
 
           {/* Vertical Divider */}
           <Line x1={center} y1={center - radius} x2={center} y2={center + radius} stroke="black" strokeWidth={1} />
@@ -147,11 +157,17 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
           <Line x1={center} y1={center} x2={center + radius} y2={center} stroke="black" strokeWidth={3} />
           <Line x1={center} y1={center} x2={center} y2={center - radius} stroke="black" strokeWidth={3} />
         </G>
+
+        {/* Add faint background circle */}
+        {/* <Circle cx={center} cy={center - radius / 2 - 3} r={radius / 3.5} stroke="black" strokeWidth={0} fill="rgba(255, 255, 255, 0.6)" /> */}
+
+        {/* North Slice: Current Icon */}
+
         <SvgImage
-          x={center - 32} // Center the image horizontally
+          x={center - iconSize / 2} // Center the image horizontally
           y={center - radius} // Position vertically at the North slice
-          width={64} // Icon width
-          height={64} // Icon height
+          width={iconSize}
+          height={iconSize}
           href={{ uri: `https:${data.icon}` }} // Add 'https:' to the icon URL
         />
 
@@ -163,7 +179,7 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
 
         {/* South Slice: Current Temperature */}
         {/* <Text style={[styles.wheelText, { top: center + radius / 2.5, left: center - 15, fontSize: 24 }]}>{data.temp}°</Text> */}
-        <Text style={[styles.wheelText, styles.wheelAQI, { top: center + radius / 2.5, left: center - 15, fontSize: 24 }]}>{data.aqi}</Text>
+        <Text style={[styles.wheelText, styles.wheelAQI, { top: center + radius / 2.8, left: center - 12, fontSize: 32 }]}>{data.aqi}</Text>
 
         {/* SW Slice: Current UV */}
         <Text style={[styles.wheelText, styles.wheelUV, { top: center + radius / 6, right: center + center / 2.5 }]}>{data.uv}</Text>
@@ -180,10 +196,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
-  },
-  title: {
-    fontSize: 36,
   },
   wheelText: {
     position: "absolute",
@@ -197,6 +209,7 @@ const styles = StyleSheet.create({
   },
   wheelAQI: {
     fontFamily: "AlumniSansPinstripe-Regular",
+    color: "#000000",
   },
   nextData: {
     color: "white",

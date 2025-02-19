@@ -1,35 +1,32 @@
-// TODO: store api key in .env file
-import { WeatherLocation } from "@/types/WeatherLocation";
 import axios from "axios";
-import mockResponse from "./mockResponse";
-import { transformCurrentWeather } from "./transformers/transformCurrentWeather";
-import { WeatherAPICurrent } from "@/types/weatherapi/WeatherAPICurrent";
-import { LatLong } from "@/types/LatLong";
+import { mockResponse as mockWeatherAPIResponse } from "./mock-data/mockWeatherAPIResponse";
+import { mockResponse as mockOpenMeteoResponse } from "./mock-data/mockOpenMeteoResponse";
+import { mockResponse as mockAirQualityResponse } from "./mock-data/mockOpenMeteoAQIResponse";
 
-const INCLUDE_AQI = true;
 const MOCK_RESPONSE = true;
 
-export const weatherService = async (location: WeatherLocation | LatLong): Promise<any> => {
+export const weatherService = async (apiUrl: string): Promise<any> => {
   try {
-    let data: WeatherAPICurrent;
+    let data: any;
 
     if (MOCK_RESPONSE) {
-      console.log("Using mock response");
-      data = mockResponse;
+      console.log("Using mock response for url: " + apiUrl.split("https://")[1]);
+      if (apiUrl.includes("weatherapi")) {
+        data = mockWeatherAPIResponse;
+      } else if (apiUrl.includes("air-quality")) {
+        data = mockAirQualityResponse;
+      } else {
+        data = mockOpenMeteoResponse;
+      }
     } else {
-      const apiUrl = process.env.EXPO_PUBLIC_WEATHER_API_URL;
-      const apiKey = process.env.EXPO_PUBLIC_WEATHER_API_KEY;
-
-      // q param is `{latitude},{longitude}`
-      const url = `${apiUrl}/current.json?q=${location.lat},${location.lon}${INCLUDE_AQI ? "&aqi=yes" : ""}&key=${apiKey}`;
-
-      console.log(`Fetching weather data from ${url}`);
-      const response = await axios.get(url);
+      console.log(`Fetching weather data from ${apiUrl}`);
+      const response = await axios.get(apiUrl);
       data = response.data;
     }
 
     return data;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    console.error(error.toJSON());
+    return error;
   }
 };

@@ -4,6 +4,6 @@ export interface NobsWeather {
   temp: number;
   uv: number;
   aqi: number;
-  nextTemp: number;
-  nextUV: number;
+  nextTemp: string;
+  nextUV: string;
 }
