@@ -4,8 +4,8 @@ import { NobsWeather } from "@/types/NobsWeather";
 import { useEffect, useState } from "react";
 import { weatherService } from "@/services/api/weatherService";
 import OpenMeteoCodeToWeatherAPIIcon from "@/constants/OpenMeteoCodeToWeatherAPIIcon";
-import { City } from "@/services/api/cityService";
 import { useCityTime } from "@/hooks/useCityTime";
+import { NobsCity } from "@/types/NobsCity";
 
 const initialNobsWeather: NobsWeather = {
   name: "",
@@ -18,13 +18,12 @@ const initialNobsWeather: NobsWeather = {
 };
 
 interface NobsLocationProps {
-  city: City;
+  city: NobsCity;
 }
 
 export const NobsLocation = ({ city }: NobsLocationProps) => {
   const [rawData, setRawData] = useState<NobsWeather>(initialNobsWeather);
   const time: string = useCityTime(city.timezone).split(" ").join("").toLocaleLowerCase();
-  // TODO: fetch location from API or storage
 
   const getData = async (apiUrl: string, apiKey: string) => {
     return weatherService(apiUrl);
@@ -39,7 +38,6 @@ export const NobsLocation = ({ city }: NobsLocationProps) => {
         // console.log(data.hourly.apparent_temperature[3]);
         // For now just do this manipulation here, can move to transformer later if it gets more complicated
         const weatherCode = data.current.weather_code as keyof typeof OpenMeteoCodeToWeatherAPIIcon;
-        console.log(`Weather code: ${weatherCode}`);
         const icon = `//cdn.weatherapi.com/weather/64x64/day/${OpenMeteoCodeToWeatherAPIIcon[weatherCode].icon}.png`;
         const feelsLike = Math.round(data.current.apparent_temperature);
         const uv = Math.round(data.current.uv_index);
@@ -91,15 +89,17 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    paddingTop: 3,
+    padding: 1,
     borderWidth: 1,
     borderColor: "black",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
-    borderRadius: 40,
+    borderRadius: 30,
     boxShadow: "0 0 8px rgba(0, 0, 0, 0.4)",
   },
   title: {
     fontSize: 20,
+    fontWeight: "bold",
   },
   time: {
     fontSize: 14,

@@ -29,12 +29,10 @@ const WHEEL_FILL_COLORS = {
 };
 
 const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
-  const size = 180; // Diameter of wheel: min-width of 180px, max-width of 360px
+  const size = 170; // Diameter of wheel: min-width of 180px, max-width of 360px
   const center = size / 2;
   const radius = size / 2 - 20;
   const iconSize = 55;
-
-  // console.log(data);
 
   const createSlicePath = (startAngle: number, endAngle: number) => {
     const startX = center + radius * Math.cos(startAngle);
@@ -51,35 +49,25 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styles.shadow]}>
       <Svg width={size} height={size}>
         <G transform={`rotate(45, ${center}, ${center})`}>
           {/* Outer Circle */}
           <Defs>
             {/* Radial Gradient for Next Slice */}
-            <RadialGradient id="nextGradient" cx="0%" cy="100%" r="200%">
+            {/* <RadialGradient id="nextGradient" cx="0%" cy="100%" r="200%">
               <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.nextStart} />
               <Stop offset="100%" stopColor={WHEEL_FILL_COLORS.nextEnd} />
-            </RadialGradient>
+            </RadialGradient> */}
 
             {/* Radial Gradient for Current Slice */}
-            <RadialGradient id="currentGradient" cx="50%" cy="50%" r="100%">
+            {/* <RadialGradient id="currentGradient" cx="50%" cy="50%" r="100%">
               <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.start} />
               <Stop offset="80%" stopColor={WHEEL_FILL_COLORS.end} />
-            </RadialGradient>
-
-            {/* Drop Shadow Filter */}
-            <Filter id="shadow">
-              <FeOffset dx="2" dy="2" result="offset" />
-              <FeGaussianBlur in="offset" stdDeviation="5" result="blurred" />
-              <FeMerge>
-                <FeMergeNode in="blurred" />
-                <FeMergeNode in="SourceGraphic" />
-              </FeMerge>
-            </Filter>
+            </RadialGradient> */}
           </Defs>
 
-          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={0} fill="black" filter="url(#shadow)" />
+          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={0} fill="black" />
 
           {/* North: Current Icon */}
           <Path
@@ -158,9 +146,6 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
           <Line x1={center} y1={center} x2={center} y2={center - radius} stroke="black" strokeWidth={3} />
         </G>
 
-        {/* Add faint background circle */}
-        {/* <Circle cx={center} cy={center - radius / 2 - 3} r={radius / 3.5} stroke="black" strokeWidth={0} fill="rgba(255, 255, 255, 0.6)" /> */}
-
         {/* North Slice: Current Icon */}
 
         <SvgImage
@@ -196,6 +181,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+    elevation: 5, // For Android
   },
   wheelText: {
     position: "absolute",
