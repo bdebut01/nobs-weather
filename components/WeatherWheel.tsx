@@ -6,6 +6,7 @@ import { Image as SvgImage } from "react-native-svg";
 
 interface WeatherWheelProps {
   data: NobsWeather;
+  isPinned?: boolean;
 }
 
 const WHEEL_FILL_COLORS = {
@@ -28,7 +29,7 @@ const WHEEL_FILL_COLORS = {
   nextEnd: "#4c5059",
 };
 
-const WeatherWheel: React.FC<WeatherWheelProps> = ({ data }) => {
+const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
   const size = 170; // Diameter of wheel: min-width of 180px, max-width of 360px
   const center = size / 2;
   const radius = size / 2 - 20;

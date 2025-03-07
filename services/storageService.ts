@@ -32,18 +32,53 @@ export default class StorageService {
     }
   }
 
+  static async setPinnedCity(city: NobsCity | null): Promise<void> {
+    try {
+      if (city) {
+        // Update city to pinned
+        city.isPinned = true;
+        // Remove pin from all others
+        const cities = await this.getSavedCities();
+        const updatedCities = cities.map((c) => {
+          c.isPinned = citiesAreEqual(c, city);
+          return c;
+        });
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCities));
+      } else {
+        // Remove pin from all
+        const cities = await this.getSavedCities();
+        const updatedCities = cities.map((c) => {
+          c.isPinned = false;
+          return c;
+        });
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCities));
+      }
+    } catch (error) {
+      console.error("Error setting pinned city: ", error);
+    }
+  }
+
+  static async getPinnedCity(): Promise<NobsCity | null> {
+    try {
+      const cities = await this.getSavedCities();
+      return cities.find((c) => c.isPinned) || null;
+    } catch (error) {
+      console.error("Error fetching pinned city: ", error);
+      return null;
+    }
+  }
+
   static async removeCity(city: NobsCity): Promise<void> {
     try {
       const cities = await this.getSavedCities();
-      // todo stronger comparison
-      const updatedCities = cities.filter((c) => citiesAreEqual(c, city));
+      const updatedCities = cities.filter((c) => !citiesAreEqual(c, city));
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCities));
     } catch (error) {
       console.error("Error removing city: ", error);
     }
   }
 
-  static async clearAllCities(): Promise<void> {
+  static async clearAll(): Promise<void> {
     try {
       await AsyncStorage.removeItem(STORAGE_KEY);
     } catch (error) {

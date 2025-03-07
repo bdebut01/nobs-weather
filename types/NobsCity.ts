@@ -5,4 +5,5 @@ export interface NobsCity {
   stateAbbr: string;
   location: LatLong;
   timezone: string;
+  isPinned: boolean;
 }

@@ -16,6 +16,7 @@ export const cityService = async (): Promise<NobsCity[]> => {
         lat: city.lat,
         lon: city.lon,
       },
+      isPinned: false,
       timezone: timezoneMap[city.tz],
     });
   }

@@ -1,4 +1,5 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
+import { SymbolView } from "expo-symbols";
 import WeatherWheel from "./WeatherWheel";
 import { NobsWeather } from "@/types/NobsWeather";
 import { useEffect, useState } from "react";
@@ -19,11 +20,16 @@ const initialNobsWeather: NobsWeather = {
 
 interface NobsLocationProps {
   city: NobsCity;
+  isPinned?: boolean;
+  onPin: Function;
+  onDelete: Function;
 }
 
-export const NobsLocation = ({ city }: NobsLocationProps) => {
+export const NobsLocation = ({ city, isPinned = false, onPin, onDelete }: NobsLocationProps) => {
   const [rawData, setRawData] = useState<NobsWeather>(initialNobsWeather);
   const time: string = useCityTime(city.timezone).split(" ").join("").toLocaleLowerCase();
+
+  const scaleFactor = isPinned ? 0.9 : 0.7;
 
   const getData = async (apiUrl: string, apiKey: string) => {
     return weatherService(apiUrl);
@@ -77,10 +83,27 @@ export const NobsLocation = ({ city }: NobsLocationProps) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{city.name}</Text>
-      <Text style={styles.time}>{time}</Text>
-      <WeatherWheel data={rawData} />
+    <View
+      style={[
+        styles.container,
+        {
+          width: 215 * scaleFactor, // Adjust width dynamically
+          height: 250 * scaleFactor,
+        },
+      ]}
+    >
+      <View style={[styles.scaledContent, { transform: [{ scale: scaleFactor }] }, isPinned ? styles.pinned : styles.notPinned]}>
+        <Pressable style={styles.pin} onPress={() => onPin(city)}>
+          <SymbolView name="mappin" size={18} />
+        </Pressable>
+        <Pressable style={styles.delete} onPress={() => onDelete(city)}>
+          <SymbolView name="trash" size={18} />
+        </Pressable>
+
+        <Text style={styles.title}>{city.name}</Text>
+        <Text style={styles.time}>{time}</Text>
+        <WeatherWheel data={rawData} isPinned={isPinned} />
+      </View>
     </View>
   );
 };
@@ -89,13 +112,39 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 3,
-    padding: 1,
+    paddingTop: 10,
+    padding: 5, // Keep padding consistent
     borderWidth: 1,
     borderColor: "black",
     backgroundColor: "rgba(255, 255, 255, 0.6)",
     borderRadius: 30,
-    boxShadow: "0 0 8px rgba(0, 0, 0, 0.4)",
+    shadowColor: "#000", // Fix for shadows in React Native
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 5, // Android shadow
+  },
+  scaledContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%", // Keep layout consistent
+  },
+  pinned: {
+    // backgroundColor: "rgba(182, 26, 26, 0.8)",
+  },
+  notPinned: {
+    width: "140%", // hacks to make the scaling happen
+    height: "140%",
+  },
+  pin: {
+    position: "absolute",
+    top: 5,
+    left: 10,
+  },
+  delete: {
+    position: "absolute",
+    top: 5,
+    right: 10,
   },
   title: {
     fontSize: 20,
