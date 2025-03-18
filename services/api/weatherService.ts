@@ -3,7 +3,7 @@ import { mockResponse as mockWeatherAPIResponse } from "./mock-data/mockWeatherA
 import { mockResponse as mockOpenMeteoResponse } from "./mock-data/mockOpenMeteoResponse";
 import { mockResponse as mockAirQualityResponse } from "./mock-data/mockOpenMeteoAQIResponse";
 
-const MOCK_RESPONSE = true;
+const MOCK_RESPONSE = false;
 
 export const weatherService = async (apiUrl: string): Promise<any> => {
   try {

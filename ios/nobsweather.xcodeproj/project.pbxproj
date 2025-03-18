@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A9342BF2B9147A8B76B54B0 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D041F24D3C4819A107DB62 /* noop-file.swift */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		2DD9F71553F54AE1906B19F9 /* AlumniSansPinstripe-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B66D274D383742B488C11C71 /* AlumniSansPinstripe-Regular.ttf */; };
-		391A5ADF975546029587A36A /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ACB708ACE8BA4C23ADD69BBE /* SpaceMono-Regular.ttf */; };
+		2CC4F5DABF534D44970D094C /* AlumniSansPinstripe-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 891D0D0089894A72B7E4E02B /* AlumniSansPinstripe-Regular.ttf */; };
+		2FE49F6212B74B1BBDA7FDBC /* SpaceMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BEC737A8257A436AA6D212CA /* SpaceMono-Regular.ttf */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		6BD443E23734409D92761A88 /* SixtyfourConvergence-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3B2B8930B604E4A9E5A9447 /* SixtyfourConvergence-Regular.ttf */; };
 		96905EF65AED1B983A6B3ABC /* libPods-nobsweather.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EEBF8E8E6FB1BC6CAF49B5 /* libPods-nobsweather.a */; };
+		A8E5733C4CB94EC3AEECFF09 /* SixtyfourConvergence-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 193C684C0C524A43A6E80BFE /* SixtyfourConvergence-Regular.ttf */; };
+		AA33C0FB0A054B5F9A34977F /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDF80293D4C4F04AE34E453 /* noop-file.swift */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		EAD325564DA1F67C1CF8910B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7B6D59DA13B2D3EDFE591BF9 /* PrivacyInfo.xcprivacy */; };
+		FA5D144C9EB878685D4F439E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F5AC2227FB70DD53F6CF301C /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,18 +28,18 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = nobsweather/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = nobsweather/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = nobsweather/main.m; sourceTree = "<group>"; };
+		193C684C0C524A43A6E80BFE /* SixtyfourConvergence-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SixtyfourConvergence-Regular.ttf"; path = "../assets/fonts/SixtyfourConvergence-Regular.ttf"; sourceTree = "<group>"; };
+		3CDF80293D4C4F04AE34E453 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "nobsweather/noop-file.swift"; sourceTree = "<group>"; };
 		58EEBF8E8E6FB1BC6CAF49B5 /* libPods-nobsweather.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-nobsweather.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C2E3173556A471DD304B334 /* Pods-nobsweather.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nobsweather.debug.xcconfig"; path = "Target Support Files/Pods-nobsweather/Pods-nobsweather.debug.xcconfig"; sourceTree = "<group>"; };
 		7A4D352CD337FB3A3BF06240 /* Pods-nobsweather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nobsweather.release.xcconfig"; path = "Target Support Files/Pods-nobsweather/Pods-nobsweather.release.xcconfig"; sourceTree = "<group>"; };
-		7B6D59DA13B2D3EDFE591BF9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = nobsweather/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		A570344895DA4F9E9F0F2A36 /* nobsweather-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "nobsweather-Bridging-Header.h"; path = "nobsweather/nobsweather-Bridging-Header.h"; sourceTree = "<group>"; };
+		891D0D0089894A72B7E4E02B /* AlumniSansPinstripe-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AlumniSansPinstripe-Regular.ttf"; path = "../assets/fonts/AlumniSansPinstripe-Regular.ttf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = nobsweather/SplashScreen.storyboard; sourceTree = "<group>"; };
-		ACB708ACE8BA4C23ADD69BBE /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
-		B66D274D383742B488C11C71 /* AlumniSansPinstripe-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AlumniSansPinstripe-Regular.ttf"; path = "../assets/fonts/AlumniSansPinstripe-Regular.ttf"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		D3B2B8930B604E4A9E5A9447 /* SixtyfourConvergence-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SixtyfourConvergence-Regular.ttf"; path = "../assets/fonts/SixtyfourConvergence-Regular.ttf"; sourceTree = "<group>"; };
-		E9D041F24D3C4819A107DB62 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "nobsweather/noop-file.swift"; sourceTree = "<group>"; };
+		BEC737A8257A436AA6D212CA /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
+		E0055096FBA546FFB11BC516 /* nobsweather-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "nobsweather-Bridging-Header.h"; path = "nobsweather/nobsweather-Bridging-Header.h"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F5AC2227FB70DD53F6CF301C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = nobsweather/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-nobsweather/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,9 +65,9 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				E9D041F24D3C4819A107DB62 /* noop-file.swift */,
-				A570344895DA4F9E9F0F2A36 /* nobsweather-Bridging-Header.h */,
-				7B6D59DA13B2D3EDFE591BF9 /* PrivacyInfo.xcprivacy */,
+				3CDF80293D4C4F04AE34E453 /* noop-file.swift */,
+				E0055096FBA546FFB11BC516 /* nobsweather-Bridging-Header.h */,
+				F5AC2227FB70DD53F6CF301C /* PrivacyInfo.xcprivacy */,
 			);
 			name = nobsweather;
 			sourceTree = "<group>";
@@ -79,6 +79,16 @@
 				58EEBF8E8E6FB1BC6CAF49B5 /* libPods-nobsweather.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8095A77EC62D4C3786231551 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				BEC737A8257A436AA6D212CA /* SpaceMono-Regular.ttf */,
+				193C684C0C524A43A6E80BFE /* SixtyfourConvergence-Regular.ttf */,
+				891D0D0089894A72B7E4E02B /* AlumniSansPinstripe-Regular.ttf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -97,7 +107,7 @@
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
-				AEC0D1C0BFB445B6924DE505 /* Resources */,
+				8095A77EC62D4C3786231551 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -118,16 +128,6 @@
 				FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */,
 			);
 			name = nobsweather;
-			sourceTree = "<group>";
-		};
-		AEC0D1C0BFB445B6924DE505 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				ACB708ACE8BA4C23ADD69BBE /* SpaceMono-Regular.ttf */,
-				D3B2B8930B604E4A9E5A9447 /* SixtyfourConvergence-Regular.ttf */,
-				B66D274D383742B488C11C71 /* AlumniSansPinstripe-Regular.ttf */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		BB2F792B24A3F905000567C9 /* Supporting */ = {
@@ -164,13 +164,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "nobsweather" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				690994789062C046356AAD38 /* [Expo] Configure project */,
+				14883E86F1D76A3AD6639ADF /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				68164DF42F8E5B4F64F114DB /* [CP] Embed Pods Frameworks */,
+				9E53BBA05D4EBAED23AB1E1E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -220,10 +220,10 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				391A5ADF975546029587A36A /* SpaceMono-Regular.ttf in Resources */,
-				6BD443E23734409D92761A88 /* SixtyfourConvergence-Regular.ttf in Resources */,
-				2DD9F71553F54AE1906B19F9 /* AlumniSansPinstripe-Regular.ttf in Resources */,
-				EAD325564DA1F67C1CF8910B /* PrivacyInfo.xcprivacy in Resources */,
+				2FE49F6212B74B1BBDA7FDBC /* SpaceMono-Regular.ttf in Resources */,
+				A8E5733C4CB94EC3AEECFF09 /* SixtyfourConvergence-Regular.ttf in Resources */,
+				2CC4F5DABF534D44970D094C /* AlumniSansPinstripe-Regular.ttf in Resources */,
+				FA5D144C9EB878685D4F439E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,25 +267,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		68164DF42F8E5B4F64F114DB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-nobsweather/Pods-nobsweather-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nobsweather/Pods-nobsweather-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		690994789062C046356AAD38 /* [Expo] Configure project */ = {
+		14883E86F1D76A3AD6639ADF /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -344,6 +326,24 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nobsweather/Pods-nobsweather-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		9E53BBA05D4EBAED23AB1E1E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-nobsweather/Pods-nobsweather-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-nobsweather/Pods-nobsweather-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -354,7 +354,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
-				0A9342BF2B9147A8B76B54B0 /* noop-file.swift in Sources */,
+				AA33C0FB0A054B5F9A34977F /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,10 +483,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -541,10 +538,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -58,6 +58,7 @@ const CitySearch = forwardRef<TextInput, { onCitySelected: (city: NobsCity) => v
       {filteredCities.length > 0 && (
         <FlatList
           data={filteredCities}
+          keyboardShouldPersistTaps="handled"
           keyExtractor={(item) => `${item.value.name}-${item.value.stateAbbr}`} // Unique key
           renderItem={({ item }) => (
             <TouchableOpacity style={styles.item} onPress={() => handleSelectCity(item.value)}>
