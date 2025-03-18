@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect, forwardRef } from "react";
+import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet, Keyboard } from "react-native";
 import { NobsCity } from "@/types/NobsCity";
 import StorageService from "@/services/storageService";
 
 const MAX_SEARCH_RESULTS = 6;
 
-const CitySearch = ({ onCitySelected }: { onCitySelected: (city: NobsCity) => void }) => {
+const CitySearch = forwardRef<TextInput, { onCitySelected: (city: NobsCity) => void }>(({ onCitySelected }, ref) => {
   const [cityData, setCityData] = useState<NobsCity[]>([]);
   const [searchText, setSearchText] = useState("");
   const [filteredCities, setFilteredCities] = useState<{ label: string; value: NobsCity }[]>([]);
@@ -19,6 +19,7 @@ const CitySearch = ({ onCitySelected }: { onCitySelected: (city: NobsCity) => vo
   }, []);
 
   const handleSelectCity = async (city: NobsCity) => {
+    Keyboard.dismiss();
     setSearchText(""); // Clear search bar
     setFilteredCities([]); // Hide suggestions
     await StorageService.saveCity(city); // Save city to storage
@@ -43,7 +44,17 @@ const CitySearch = ({ onCitySelected }: { onCitySelected: (city: NobsCity) => vo
 
   return (
     <View>
-      <TextInput style={styles.input} placeholder="Search city..." value={searchText} onChangeText={setSearchText} />
+      <TextInput
+        ref={ref}
+        style={styles.input}
+        placeholder="Search city..."
+        value={searchText}
+        onChangeText={setSearchText}
+        autoCorrect={false} // 🚀 Disables autocorrect
+        autoCapitalize="none" // 🚀 Prevents unwanted capitalization
+        keyboardType="default"
+        textContentType="none" // 🚀 Ensures no autofill suggestions
+      />
       {filteredCities.length > 0 && (
         <FlatList
           data={filteredCities}
@@ -57,7 +68,7 @@ const CitySearch = ({ onCitySelected }: { onCitySelected: (city: NobsCity) => vo
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   input: {

@@ -1,16 +1,21 @@
-import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Platform } from "react-native";
+import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Keyboard } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import GestureRecognizer from "react-native-swipe-gestures";
 
 import { NobsLocation } from "@/components/NobsLocation";
 import CitySearch from "@/components/CitySearch";
 import { NobsCity } from "@/types/NobsCity";
 import StorageService from "@/services/storageService";
 import { citiesAreEqual } from "@/util/citiesAreEqual";
+import { colors } from "@/util/colors";
+import { TextInput } from "react-native-gesture-handler";
 
 export default function Index() {
   const [cities, setCities] = useState<NobsCity[]>([]);
   const [pinnedCity, setPinnedCity] = useState<NobsCity | null>(null);
+  const searchInputRef = useRef<TextInput | null>(null);
+
   const insets = useSafeAreaInsets();
 
   // Animation state for collapsible search
@@ -67,12 +72,21 @@ export default function Index() {
 
   // Expand/collapse search bar
   const toggleSearch = () => {
+    const shouldExpand = !isExpanded;
+
     Animated.timing(heightAnim, {
-      toValue: isExpanded ? 50 : 350, // Expand taller for dropdown space
+      toValue: isExpanded ? 50 : 600, // Expand taller for dropdown space
       duration: 300,
       useNativeDriver: false,
-    }).start();
-    setIsExpanded(!isExpanded);
+    }).start(() => {
+      if (shouldExpand && searchInputRef.current) {
+        Keyboard.dismiss();
+        setTimeout(() => {
+          searchInputRef.current?.focus();
+        }, 310); // Small delay to allow animation to finish before focusing
+      }
+    });
+    setIsExpanded(shouldExpand);
   };
 
   return (
@@ -93,18 +107,20 @@ export default function Index() {
       {/* Animated Search Container */}
       <Animated.View style={[styles.searchContainer, { height: heightAnim, paddingBottom: insets.bottom }]}>
         {!isExpanded ? (
-          <TouchableOpacity style={styles.searchButton} onPress={toggleSearch}>
-            <Text style={styles.searchText}>🔍 Search for a city…</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.expandedSearch}>
-            <SafeAreaView style={styles.fullWidth}>
-              <CitySearch onCitySelected={addCityToWheel} />
-            </SafeAreaView>
-            <TouchableOpacity onPress={toggleSearch} style={styles.closeButton}>
-              <Text style={styles.closeText}>✕</Text>
+          <GestureRecognizer onSwipeUp={toggleSearch}>
+            <TouchableOpacity style={styles.searchButton} onPress={toggleSearch}>
+              <Text style={styles.searchText}>🔍 Search for a city…</Text>
             </TouchableOpacity>
-          </View>
+          </GestureRecognizer>
+        ) : (
+          <GestureRecognizer onSwipeDown={toggleSearch}>
+            <View style={styles.swipeIndicator} />
+            <View style={styles.expandedSearch}>
+              <SafeAreaView style={styles.fullWidth}>
+                <CitySearch onCitySelected={addCityToWheel} ref={searchInputRef} />
+              </SafeAreaView>
+            </View>
+          </GestureRecognizer>
         )}
       </Animated.View>
     </View>
@@ -119,14 +135,16 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#CEECF2",
+    // backgroundColor: "#CEECF2",
+    backgroundColor: colors.DEPTH_ZERO,
   },
   pinnedContainer: {
-    width: "80%",
+    width: "90%",
     padding: 15,
-    // backgroundColor: "white",
+    // backgroundColor: colors.DEPTH_THREE,
+    backgroundColor: "rgba(255, 255, 255, .4)",
     borderRadius: 10,
-    shadowColor: "#000",
+    shadowColor: "#fff",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
@@ -137,9 +155,14 @@ const styles = StyleSheet.create({
   },
   scrollableContainer: {
     flex: 1,
-    width: "100%",
+    width: "90%",
+    borderRadius: 6,
     paddingHorizontal: 10,
     marginBottom: 60, // Ensures space for search bar
+    paddingTop: 20,
+    shadowColor: "#fff",
+    shadowOffset: { width: -1, height: -2 },
+    backgroundColor: "rgba(255, 255, 255, .2)",
   },
   allCitiesContainer: {
     flexDirection: "row",
@@ -161,6 +184,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     overflow: "hidden",
+    zIndex: 4,
+  },
+  swipeIndicator: {
+    width: 80,
+    height: 5,
+    backgroundColor: "#ccc",
+    borderRadius: 5,
+    alignSelf: "center",
+    marginVertical: 15,
+    touchAction: "none", // Prevents conflicts
   },
   searchButton: {
     height: 50,
@@ -172,20 +205,10 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   expandedSearch: {
-    flex: 1,
     width: "100%",
     alignItems: "center",
-    paddingHorizontal: 15,
-    paddingTop: 0,
-  },
-  closeButton: {
-    position: "absolute",
-    right: 15,
-    top: 10,
-  },
-  closeText: {
-    fontSize: 18,
-    color: "gray",
+    paddingHorizontal: 20,
+    marginTop: -50,
   },
   fullWidth: {
     width: "100%", // Ensures CitySearch takes full width

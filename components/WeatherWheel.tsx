@@ -1,7 +1,8 @@
 import { NobsWeather } from "@/types/NobsWeather";
+import { colors } from "@/util/colors";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Svg, { Circle, Line, G, Path, RadialGradient, Defs, Stop, Filter, FeOffset, FeGaussianBlur, FeMerge, FeMergeNode } from "react-native-svg";
+import Svg, { Circle, Line, G, Path, RadialGradient, Defs, Stop } from "react-native-svg";
 import { Image as SvgImage } from "react-native-svg";
 
 interface WeatherWheelProps {
@@ -23,10 +24,12 @@ const WHEEL_FILL_COLORS = {
   nextTemp: "#4f729a",
   // next: "#2B91AD",
   start: "#ffffff",
-  end: "#69bf9a", // mint green
+  // end: "#69bf9a", // mint green
+  end: colors.DEPTH_FOUR,
   // end: "#4e7ba6",
   nextStart: "#ffffff",
-  nextEnd: "#4c5059",
+  // nextEnd: "#4c5059",
+  nextEnd: colors.DEPTH_ZERO,
 };
 
 const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
@@ -56,16 +59,16 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
           {/* Outer Circle */}
           <Defs>
             {/* Radial Gradient for Next Slice */}
-            {/* <RadialGradient id="nextGradient" cx="0%" cy="100%" r="200%">
+            <RadialGradient id="nextGradient" cx="0%" cy="100%" r="150%">
               <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.nextStart} />
               <Stop offset="100%" stopColor={WHEEL_FILL_COLORS.nextEnd} />
-            </RadialGradient> */}
+            </RadialGradient>
 
             {/* Radial Gradient for Current Slice */}
-            {/* <RadialGradient id="currentGradient" cx="50%" cy="50%" r="100%">
+            <RadialGradient id="currentGradient" cx="50%" cy="50%" r="80%">
               <Stop offset="0%" stopColor={WHEEL_FILL_COLORS.start} />
               <Stop offset="80%" stopColor={WHEEL_FILL_COLORS.end} />
-            </RadialGradient> */}
+            </RadialGradient>
           </Defs>
 
           <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={0} fill="black" />
@@ -112,10 +115,10 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
             fill={WHEEL_FILL_COLORS.temp}
           />
 
-          {/* <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="url(#currentGradient)" /> */}
+          <Circle cx={center} cy={center} r={radius} stroke="black" strokeWidth={2} fill="url(#currentGradient)" />
 
           {/* Mess around with current gradient */}
-          {/* <Path
+          <Path
             d={`
               M ${center},${center}
               L ${center + radius * Math.cos(-Math.PI / 2)},${center + radius * Math.sin(-Math.PI / 2)}
@@ -128,7 +131,7 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
             fill={"url(#currentGradient)"}
           />
 
-          <Path d={createSlicePath(-Math.PI / 2, 0)} fill={"url(#nextGradient)"} /> */}
+          <Path d={createSlicePath(-Math.PI / 2, 0)} fill={"url(#nextGradient)"} />
 
           {/* Vertical Divider */}
           <Line x1={center} y1={center - radius} x2={center} y2={center + radius} stroke="black" strokeWidth={1} />
@@ -148,7 +151,6 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
         </G>
 
         {/* North Slice: Current Icon */}
-
         <SvgImage
           x={center - iconSize / 2} // Center the image horizontally
           y={center - radius} // Position vertically at the North slice
@@ -172,7 +174,7 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
 
         {/* NW Slice: Current AQI */}
         {/* <Text style={[styles.wheelText, styles.wheelAQI, { top: center - radius / 2.5, right: center + center / 2.8 }]}>{data.aqi}</Text> */}
-        <Text style={[styles.wheelText, { top: center - radius / 2.5, right: center + center / 3 }]}>{data.temp}°</Text>
+        <Text style={[styles.wheelText, { top: center - radius / 2.5, right: center + center / 3.5 }]}>{data.temp}°</Text>
       </Svg>
     </View>
   );

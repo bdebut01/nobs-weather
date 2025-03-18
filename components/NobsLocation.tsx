@@ -2,11 +2,12 @@ import { View, StyleSheet, Text, Pressable } from "react-native";
 import { SymbolView } from "expo-symbols";
 import WeatherWheel from "./WeatherWheel";
 import { NobsWeather } from "@/types/NobsWeather";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { weatherService } from "@/services/api/weatherService";
 import OpenMeteoCodeToWeatherAPIIcon from "@/constants/OpenMeteoCodeToWeatherAPIIcon";
 import { useCityTime } from "@/hooks/useCityTime";
 import { NobsCity } from "@/types/NobsCity";
+import { colors } from "@/util/colors";
 
 const initialNobsWeather: NobsWeather = {
   name: "",
@@ -20,12 +21,15 @@ const initialNobsWeather: NobsWeather = {
 
 interface NobsLocationProps {
   city: NobsCity;
+  includeState?: boolean;
   isPinned?: boolean;
   onPin: Function;
   onDelete: Function;
 }
 
-export const NobsLocation = ({ city, isPinned = false, onPin, onDelete }: NobsLocationProps) => {
+const MAX_CITY_NAME_LEN = 11;
+
+export const NobsLocation = ({ city, includeState = false, isPinned = false, onPin, onDelete }: NobsLocationProps) => {
   const [rawData, setRawData] = useState<NobsWeather>(initialNobsWeather);
   const time: string = useCityTime(city.timezone).split(" ").join("").toLocaleLowerCase();
 
@@ -34,6 +38,15 @@ export const NobsLocation = ({ city, isPinned = false, onPin, onDelete }: NobsLo
   const getData = async (apiUrl: string, apiKey: string) => {
     return weatherService(apiUrl);
   };
+
+  const cityText = useMemo(() => {
+    // Abbreviate city if too long
+    let dots = city.name.length > MAX_CITY_NAME_LEN ? ".." : "";
+    let res = city.name.substring(0, MAX_CITY_NAME_LEN) + dots;
+
+    // Append state abbr. if requested
+    return includeState ? `${res}, ${city.stateAbbr}` : res;
+  }, [city]);
 
   useEffect(() => {
     const openMeteoUrl = process.env.EXPO_PUBLIC_OPEN_METEO_URL;
@@ -93,15 +106,18 @@ export const NobsLocation = ({ city, isPinned = false, onPin, onDelete }: NobsLo
       ]}
     >
       <View style={[styles.scaledContent, { transform: [{ scale: scaleFactor }] }, isPinned ? styles.pinned : styles.notPinned]}>
-        <Pressable style={styles.pin} onPress={() => onPin(city)}>
-          <SymbolView name="mappin" size={18} />
-        </Pressable>
-        <Pressable style={styles.delete} onPress={() => onDelete(city)}>
-          <SymbolView name="trash" size={18} />
-        </Pressable>
-
-        <Text style={styles.title}>{city.name}</Text>
-        <Text style={styles.time}>{time}</Text>
+        <View style={styles.headerContent}>
+          <Pressable style={[styles.pin, isPinned && styles.pinPressed]} onPress={() => onPin(city)}>
+            <SymbolView name={isPinned ? "pin.slash" : "pin.fill"} size={18} tintColor={isPinned ? "white" : colors.DEPTH_ZERO} />
+          </Pressable>
+          <View style={styles.titleTimeContainer}>
+            <Text style={styles.title}>{cityText}</Text>
+            <Text style={styles.time}>{time}</Text>
+          </View>
+          <Pressable style={styles.delete} onPress={() => onDelete(city)}>
+            <SymbolView name="trash" size={18} tintColor={colors.DEPTH_ZERO} />
+          </Pressable>
+        </View>
         <WeatherWheel data={rawData} isPinned={isPinned} />
       </View>
     </View>
@@ -112,17 +128,30 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 10,
+    paddingTop: 5,
     padding: 5, // Keep padding consistent
     borderWidth: 1,
     borderColor: "black",
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
-    borderRadius: 30,
+    // backgroundColor: "rgba(255, 255, 255, 0.6)",
+    backgroundColor: colors.DEPTH_THREE,
+    borderRadius: 20,
     shadowColor: "#000", // Fix for shadows in React Native
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.4,
     shadowRadius: 8,
     elevation: 5, // Android shadow
+  },
+  headerContent: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-around",
+  },
+  titleTimeContainer: {
+    display: "flex",
+    textAlign: "center",
+    alignContent: "center",
   },
   scaledContent: {
     alignItems: "center",
@@ -130,28 +159,42 @@ const styles = StyleSheet.create({
     width: "100%", // Keep layout consistent
   },
   pinned: {
-    // backgroundColor: "rgba(182, 26, 26, 0.8)",
+    // backgroundColor: colors.DEPTH_TWO,
   },
   notPinned: {
     width: "140%", // hacks to make the scaling happen
     height: "140%",
   },
   pin: {
-    position: "absolute",
-    top: 5,
-    left: 10,
+    // position: "absolute",
+    // top: 5,
+    // left: 10,
+    backgroundColor: "rgba(255, 255, 255, .2)",
+    borderRadius: 10,
+    padding: 3,
+  },
+  pinPressed: {
+    backgroundColor: colors.DEPTH_ONE,
+    color: "white",
   },
   delete: {
-    position: "absolute",
-    top: 5,
-    right: 10,
+    // position: "absolute",
+    // top: 5,
+    // right: 5,
+    backgroundColor: "rgba(255, 255, 255, .2)",
+    borderRadius: 10,
+    padding: 3,
+    // borderRadius: 3,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
+    color: "white",
   },
   time: {
-    fontSize: 14,
+    fontSize: 16,
     fontStyle: "italic",
+    color: "white",
+    textAlign: "center",
   },
 });
