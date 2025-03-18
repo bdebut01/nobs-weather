@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Keyboard } from "react-native";
+import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Keyboard, Modal, Image } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import GestureRecognizer from "react-native-swipe-gestures";
@@ -14,6 +14,7 @@ import { TextInput } from "react-native-gesture-handler";
 export default function Index() {
   const [cities, setCities] = useState<NobsCity[]>([]);
   const [pinnedCity, setPinnedCity] = useState<NobsCity | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
   const searchInputRef = useRef<TextInput | null>(null);
 
   const insets = useSafeAreaInsets();
@@ -90,12 +91,20 @@ export default function Index() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>NOBS Weather</Text>
+        <TouchableOpacity style={styles.helpButton} onPress={() => setShowHelp(true)}>
+          <Text style={styles.helpButtonText}>❔</Text>
+        </TouchableOpacity>
+      </View>
+
       {pinnedCity && (
         <View style={styles.pinnedContainer}>
           <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} />
         </View>
       )}
+
       <ScrollView style={styles.scrollableContainer}>
         <View style={styles.allCitiesContainer}>
           {cities.map((city) => (
@@ -103,6 +112,14 @@ export default function Index() {
           ))}
         </View>
       </ScrollView>
+
+      <Modal animationType="fade" transparent={true} visible={showHelp} onRequestClose={() => setShowHelp(false)}>
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowHelp(false)}>
+          <View style={styles.modalContent}>
+            <Image source={require("../assets/images/explainer.png")} style={styles.explainerImage} resizeMode="contain" />
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       {/* Animated Search Container */}
       <Animated.View style={[styles.searchContainer, { height: heightAnim, paddingBottom: insets.bottom }]}>
@@ -129,19 +146,29 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 10,
-    paddingHorizontal: 2,
-    gap: 10,
-    height: "100%",
+    flex: 1,
     width: "100%",
     alignItems: "center",
-    // backgroundColor: "#CEECF2",
     backgroundColor: colors.DEPTH_ZERO,
   },
+  header: {
+    width: "100%",
+    height: 44,
+    backgroundColor: colors.DEPTH_ZERO,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
+    position: "relative",
+  },
+  headerTitle: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "500",
+  },
   pinnedContainer: {
+    position: "relative",
     width: "90%",
     padding: 15,
-    // backgroundColor: colors.DEPTH_THREE,
     backgroundColor: "rgba(255, 255, 255, .4)",
     borderRadius: 10,
     shadowColor: "#fff",
@@ -212,5 +239,47 @@ const styles = StyleSheet.create({
   },
   fullWidth: {
     width: "100%", // Ensures CitySearch takes full width
+  },
+  helpButton: {
+    position: "absolute",
+    top: 6, // Center vertically in header (44 - 32) / 2
+    right: 18,
+    zIndex: 5,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: colors.DEPTH_TWO,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  helpButtonText: {
+    fontSize: 16,
+    color: "#fff",
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: "85%",
+    maxHeight: "80%",
+    backgroundColor: "transparent",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  explainerImage: {
+    width: "75%",
+    height: undefined,
+    aspectRatio: 1,
   },
 });

@@ -11,5 +11,5 @@ const convertToCityTime = (timezone: string) => {
 
 // Memoized version for performance
 export const useCityTime = (timezone: string) => {
-  return useMemo(() => convertToCityTime(timezone), [timezone]);
+  return convertToCityTime(timezone);
 };
