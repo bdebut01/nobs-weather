@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Keyboard, Modal, Image } from "react-native";
+import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Keyboard, Modal, Image, RefreshControl } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import GestureRecognizer from "react-native-swipe-gestures";
@@ -15,6 +15,7 @@ export default function Index() {
   const [cities, setCities] = useState<NobsCity[]>([]);
   const [pinnedCity, setPinnedCity] = useState<NobsCity | null>(null);
   const [showHelp, setShowHelp] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const searchInputRef = useRef<TextInput | null>(null);
 
   const insets = useSafeAreaInsets();
@@ -90,6 +91,12 @@ export default function Index() {
     setIsExpanded(shouldExpand);
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([loadCities(), loadPinnedCity()]);
+    setRefreshing(false);
+  };
+
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.header}>
@@ -99,17 +106,19 @@ export default function Index() {
         </TouchableOpacity>
       </View>
 
-      {pinnedCity && (
-        <View style={styles.pinnedContainer}>
-          <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} />
-        </View>
-      )}
+      <ScrollView style={styles.mainScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />}>
+        {pinnedCity && (
+          <View style={styles.pinnedContainer}>
+            <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} />
+          </View>
+        )}
 
-      <ScrollView style={styles.scrollableContainer}>
-        <View style={styles.allCitiesContainer}>
-          {cities.map((city) => (
-            <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
-          ))}
+        <View style={styles.citiesContainer}>
+          <View style={styles.allCitiesContainer}>
+            {cities.map((city) => (
+              <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
+            ))}
+          </View>
         </View>
       </ScrollView>
 
@@ -169,6 +178,7 @@ const styles = StyleSheet.create({
     position: "relative",
     width: "90%",
     padding: 15,
+    alignSelf: "center",
     backgroundColor: "rgba(255, 255, 255, .4)",
     borderRadius: 10,
     shadowColor: "#fff",
@@ -180,9 +190,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 5,
   },
-  scrollableContainer: {
+  mainScrollView: {
     flex: 1,
+    width: "100%",
+  },
+  citiesContainer: {
     width: "90%",
+    alignSelf: "center",
     borderRadius: 6,
     paddingHorizontal: 10,
     marginBottom: 60, // Ensures space for search bar
