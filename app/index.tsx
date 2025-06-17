@@ -77,7 +77,7 @@ export default function Index() {
     const shouldExpand = !isExpanded;
 
     Animated.timing(heightAnim, {
-      toValue: isExpanded ? 50 : 600, // Expand taller for dropdown space
+      toValue: isExpanded ? 50 : 600,
       duration: 300,
       useNativeDriver: false,
     }).start(() => {
@@ -106,21 +106,27 @@ export default function Index() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.mainScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />}>
-        {pinnedCity && (
-          <View style={styles.pinnedContainer}>
-            <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} />
-          </View>
-        )}
+      {pinnedCity || cities.length > 0 ? (
+        <ScrollView style={styles.mainScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />}>
+          {pinnedCity && (
+            <View style={styles.pinnedContainer}>
+              <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} />
+            </View>
+          )}
 
-        <View style={styles.citiesContainer}>
-          <View style={styles.allCitiesContainer}>
-            {cities.map((city) => (
-              <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
-            ))}
+          <View style={styles.citiesContainer}>
+            <View style={styles.allCitiesContainer}>
+              {cities.map((city) => (
+                <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
+              ))}
+            </View>
           </View>
+        </ScrollView>
+      ) : (
+        <View style={styles.emptyStateContainer}>
+          <Text style={styles.emptyStateText}>Add a city via the bar at the bottom!</Text>
         </View>
-      </ScrollView>
+      )}
 
       <Modal animationType="fade" transparent={true} visible={showHelp} onRequestClose={() => setShowHelp(false)}>
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowHelp(false)}>
@@ -295,5 +301,30 @@ const styles = StyleSheet.create({
     width: "75%",
     height: undefined,
     aspectRatio: 1,
+  },
+  emptyStateContainer: {
+    width: "90%",
+    alignSelf: "center",
+    paddingVertical: 40,
+    marginBottom: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    borderRadius: 15,
+    padding: 30,
+    shadowColor: "#fff",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  emptyStateText: {
+    color: "#fff",
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "500",
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });
