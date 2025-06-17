@@ -160,21 +160,44 @@ const WeatherWheel: React.FC<WeatherWheelProps> = ({ data, isPinned }) => {
         />
 
         {/* NE Slice: Next Temperature */}
-        <Text style={[styles.wheelText, styles.nextData, { top: center - radius / 2.5, left: center + center / 2.8 }]}>{data.nextTemp}°</Text>
+        <Text
+          style={[
+            styles.wheelText,
+            styles.nextData,
+            {
+              top: center - radius / 2.6,
+              left: center + center / 3.2,
+              fontSize: data.nextTemp.toString().length >= 3 ? 15 : 18,
+            },
+          ]}
+        >
+          {data.nextTemp}°
+        </Text>
 
         {/* SE Slice: Next UV */}
         <Text style={[styles.wheelText, styles.wheelUV, styles.nextData, { top: center + radius / 6, left: center + center / 2.5 }]}>{data.nextUV}</Text>
 
-        {/* South Slice: Current Temperature */}
+        {/* South Slice: AQI */}
         {/* <Text style={[styles.wheelText, { top: center + radius / 2.5, left: center - 15, fontSize: 24 }]}>{data.temp}°</Text> */}
         <Text style={[styles.wheelText, styles.wheelAQI, { top: center + radius / 2.8, left: center - 12, fontSize: 32 }]}>{data.aqi}</Text>
 
         {/* SW Slice: Current UV */}
         <Text style={[styles.wheelText, styles.wheelUV, { top: center + radius / 6, right: center + center / 2.5 }]}>{data.uv}</Text>
 
-        {/* NW Slice: Current AQI */}
+        {/* NW Slice: Current Temp. */}
         {/* <Text style={[styles.wheelText, styles.wheelAQI, { top: center - radius / 2.5, right: center + center / 2.8 }]}>{data.aqi}</Text> */}
-        <Text style={[styles.wheelText, { top: center - radius / 2.5, right: center + center / 3.5 }]}>{data.temp}°</Text>
+        <Text
+          style={[
+            styles.wheelText,
+            {
+              top: center - radius / 2.5,
+              right: center + center / 3.5,
+              fontSize: data.temp.toString().length >= 3 ? 15 : 18, // Smaller font for 3 digits
+            },
+          ]}
+        >
+          {data.temp}°
+        </Text>
       </Svg>
     </View>
   );
