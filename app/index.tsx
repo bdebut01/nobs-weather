@@ -114,13 +114,16 @@ export default function Index() {
             </View>
           )}
 
-          <View style={styles.citiesContainer}>
-            <View style={styles.allCitiesContainer}>
-              {cities.map((city) => (
-                <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
-              ))}
+          {/* Pinned city is removed from `cities` so can just do a simple > 0 check here to show the rest of the cities  */}
+          {cities.length > 0 && (
+            <View style={styles.citiesContainer}>
+              <View style={styles.allCitiesContainer}>
+                {cities.map((city) => (
+                  <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
+                ))}
+              </View>
             </View>
-          </View>
+          )}
         </ScrollView>
       ) : (
         <View style={styles.emptyStateContainer}>
@@ -291,8 +294,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    width: "85%",
-    maxHeight: "80%",
+    width: "100%",
+    maxHeight: "100%",
     backgroundColor: "transparent",
     alignItems: "center",
     justifyContent: "center",
