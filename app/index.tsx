@@ -1,7 +1,6 @@
-import { View, StyleSheet, ScrollView, Animated, TouchableOpacity, Text, Keyboard, Modal, Image, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Keyboard, Modal, Image, RefreshControl } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import GestureRecognizer from "react-native-swipe-gestures";
 
 import { NobsLocation } from "@/components/NobsLocation";
 import CitySearch from "@/components/CitySearch";
@@ -17,13 +16,10 @@ export default function Index() {
   const [showHelp, setShowHelp] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const searchInputRef = useRef<TextInput | null>(null);
 
   const insets = useSafeAreaInsets();
-
-  // Animation state for collapsible search
-  const [isExpanded, setIsExpanded] = useState(false);
-  const heightAnim = useRef(new Animated.Value(50)).current; // Initial height
 
   useEffect(() => {
     loadCities();
@@ -33,6 +29,15 @@ export default function Index() {
   useEffect(() => {
     loadCities();
   }, [pinnedCity]);
+
+  useEffect(() => {
+    if (showSearchModal && searchInputRef.current) {
+      // Small delay to allow modal animation to complete
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 300);
+    }
+  }, [showSearchModal]);
 
   const loadCities = async () => {
     const savedCities = await StorageService.getSavedCities();
@@ -69,27 +74,8 @@ export default function Index() {
     if (!cities.some((c) => c.name === city.name && c.stateAbbr === city.stateAbbr)) {
       setCities((prevCities) => [...prevCities, city]);
     }
-    // Collapse search bar
-    toggleSearch();
-  };
-
-  // Expand/collapse search bar
-  const toggleSearch = () => {
-    const shouldExpand = !isExpanded;
-
-    Animated.timing(heightAnim, {
-      toValue: isExpanded ? 50 : 600,
-      duration: 300,
-      useNativeDriver: false,
-    }).start(() => {
-      if (shouldExpand && searchInputRef.current) {
-        Keyboard.dismiss();
-        setTimeout(() => {
-          searchInputRef.current?.focus();
-        }, 310); // Small delay to allow animation to finish before focusing
-      }
-    });
-    setIsExpanded(shouldExpand);
+    // Close search modal
+    setShowSearchModal(false);
   };
 
   const onRefresh = async () => {
@@ -109,30 +95,33 @@ export default function Index() {
         </TouchableOpacity>
       </View>
 
-      {pinnedCity || cities.length > 0 ? (
-        <ScrollView style={styles.mainScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />}>
+      <View style={[styles.contentWrapper, { paddingBottom: insets.bottom + 80 }]}>
+        <ScrollView style={styles.outerScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />} scrollEnabled={true} nestedScrollEnabled={true}>
           {pinnedCity && (
             <View style={styles.pinnedContainer}>
               <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
             </View>
           )}
 
-          {/* Pinned city is removed from `cities` so can just do a simple > 0 check here to show the rest of the cities  */}
-          {cities.length > 0 && (
-            <View style={styles.citiesContainer}>
-              <View style={styles.allCitiesContainer}>
-                {cities.map((city) => (
-                  <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
-                ))}
-              </View>
+          {cities.length > 0 ? (
+            <View style={styles.citiesScrollContainer}>
+              <ScrollView style={styles.citiesScrollView} nestedScrollEnabled={true} showsVerticalScrollIndicator={true} scrollEventThrottle={16}>
+                <View style={styles.citiesContainer}>
+                  <View style={styles.allCitiesContainer}>
+                    {cities.map((city) => (
+                      <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
+                    ))}
+                  </View>
+                </View>
+              </ScrollView>
             </View>
-          )}
+          ) : !pinnedCity ? (
+            <View style={styles.emptyStateContainer}>
+              <Text style={styles.emptyStateText}>Add a city using the + button!</Text>
+            </View>
+          ) : null}
         </ScrollView>
-      ) : (
-        <View style={styles.emptyStateContainer}>
-          <Text style={styles.emptyStateText}>Add a city via the bar at the bottom!</Text>
-        </View>
-      )}
+      </View>
 
       <Modal animationType="fade" transparent={true} visible={showHelp} onRequestClose={() => setShowHelp(false)}>
         <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowHelp(false)}>
@@ -142,25 +131,27 @@ export default function Index() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Animated Search Container */}
-      <Animated.View style={[styles.searchContainer, { height: heightAnim, paddingBottom: insets.bottom }]}>
-        {!isExpanded ? (
-          <GestureRecognizer onSwipeUp={toggleSearch}>
-            <TouchableOpacity style={styles.searchButton} onPress={toggleSearch}>
-              <Text style={styles.searchText}>🔍 Search for a city…</Text>
-            </TouchableOpacity>
-          </GestureRecognizer>
-        ) : (
-          <GestureRecognizer onSwipeDown={toggleSearch}>
-            <View style={styles.swipeIndicator} />
-            <View style={styles.expandedSearch}>
-              <SafeAreaView style={styles.fullWidth}>
-                <CitySearch onCitySelected={addCityToWheel} ref={searchInputRef} />
-              </SafeAreaView>
+      {/* Search Modal */}
+      <Modal animationType="slide" transparent={true} visible={showSearchModal} onRequestClose={() => setShowSearchModal(false)}>
+        <TouchableOpacity style={styles.searchModalOverlay} activeOpacity={1} onPress={() => setShowSearchModal(false)}>
+          <TouchableOpacity style={styles.searchModalContent} activeOpacity={1} onPress={() => {}}>
+            <View style={styles.searchModalHeader}>
+              <Text style={styles.searchModalTitle}>Add a City</Text>
+              <TouchableOpacity onPress={() => setShowSearchModal(false)} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>✕</Text>
+              </TouchableOpacity>
             </View>
-          </GestureRecognizer>
-        )}
-      </Animated.View>
+            <SafeAreaView style={styles.fullWidth}>
+              <CitySearch onCitySelected={addCityToWheel} ref={searchInputRef} />
+            </SafeAreaView>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Floating Plus Button */}
+      <TouchableOpacity style={[styles.floatingButton, { bottom: insets.bottom + 20 }]} onPress={() => setShowSearchModal(true)}>
+        <Text style={styles.plusIcon}>+</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -186,6 +177,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
   },
+  contentWrapper: {
+    flex: 1,
+    width: "100%",
+  },
+  outerScrollView: {
+    flex: 1,
+    width: "100%",
+  },
   pinnedContainer: {
     position: "relative",
     width: "90%",
@@ -200,18 +199,26 @@ const styles = StyleSheet.create({
     elevation: 5,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 5,
+    marginBottom: 15,
   },
   mainScrollView: {
     flex: 1,
     width: "100%",
+  },
+  citiesScrollContainer: {
+    flex: 1,
+    minHeight: 200, // Minimum height to ensure scrolling works
+  },
+  citiesScrollView: {
+    flex: 1,
+    maxHeight: 400, // Maximum height to constrain the scroll area
   },
   citiesContainer: {
     width: "90%",
     alignSelf: "center",
     borderRadius: 6,
     paddingHorizontal: 10,
-    marginBottom: 60, // Ensures space for search bar
+    marginBottom: 20, // Reduced since we no longer have the search bar
     paddingTop: 20,
     shadowColor: "#fff",
     shadowOffset: { width: -1, height: -2 },
@@ -224,44 +231,68 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingBottom: 20,
   },
-  searchContainer: {
+  // Floating Button Styles
+  floatingButton: {
     position: "absolute",
-    bottom: 0,
-    width: "100%",
+    right: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: colors.DEPTH_TWO,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+    zIndex: 10,
+  },
+  plusIcon: {
+    fontSize: 24,
+    color: "#fff",
+    fontWeight: "300",
+    textAlign: "center",
+    lineHeight: 24,
+  },
+  // Search Modal Styles
+  searchModalOverlay: {
+    flex: 1,
+    justifyContent: "flex-end",
+  },
+  searchModalContent: {
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    overflow: "hidden",
-    zIndex: 4,
+    paddingHorizontal: 20,
+    paddingBottom: 300,
+    maxHeight: "80%",
   },
-  swipeIndicator: {
-    width: 80,
-    height: 5,
-    backgroundColor: "#ccc",
-    borderRadius: 5,
-    alignSelf: "center",
-    marginVertical: 15,
-    touchAction: "none", // Prevents conflicts
+  searchModalHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
-  searchButton: {
-    height: 50,
+  searchModalTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333",
+  },
+  closeButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#f0f0f0",
     justifyContent: "center",
     alignItems: "center",
   },
-  searchText: {
-    fontSize: 16,
-    color: "gray",
-  },
-  expandedSearch: {
-    width: "100%",
-    alignItems: "center",
-    paddingHorizontal: 20,
-    marginTop: -50,
+  closeButtonText: {
+    fontSize: 18,
+    color: "#666",
+    fontWeight: "bold",
   },
   fullWidth: {
     width: "100%", // Ensures CitySearch takes full width
