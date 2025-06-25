@@ -25,11 +25,12 @@ interface NobsLocationProps {
   isPinned?: boolean;
   onPin: Function;
   onDelete: Function;
+  refreshTrigger?: number;
 }
 
 const MAX_CITY_NAME_LEN = 11;
 
-export const NobsLocation = ({ city, includeState = false, isPinned = false, onPin, onDelete }: NobsLocationProps) => {
+export const NobsLocation = ({ city, includeState = false, isPinned = false, onPin, onDelete, refreshTrigger }: NobsLocationProps) => {
   const [rawData, setRawData] = useState<NobsWeather>(initialNobsWeather);
   const time: string = useCityTime(city.timezone).split(" ").join("").toLocaleLowerCase();
 
@@ -39,21 +40,13 @@ export const NobsLocation = ({ city, includeState = false, isPinned = false, onP
     return weatherService(apiUrl);
   };
 
-  const cityText = useMemo(() => {
-    // Abbreviate city if too long
-    let dots = city.name.length > MAX_CITY_NAME_LEN ? ".." : "";
-    let res = city.name.substring(0, MAX_CITY_NAME_LEN) + dots;
-
-    // Append state abbr. if requested
-    return includeState ? `${res}, ${city.stateAbbr}` : res;
-  }, [city]);
-
-  useEffect(() => {
+  const fetchWeatherData = async () => {
     const openMeteoUrl = process.env.EXPO_PUBLIC_OPEN_METEO_URL;
     // is unauthenticated
     if (openMeteoUrl) {
       const fullUrl = `${openMeteoUrl}/?latitude=${city.location.lat}&longitude=${city.location.lon}&current=apparent_temperature,weather_code,uv_index&hourly=apparent_temperature,uv_index&temperature_unit=fahrenheit&wind_speed_unit=mph&forecast_hours=4&timezone=America%2FNew_York`;
-      getData(fullUrl, "").then((data) => {
+      try {
+        const data = await getData(fullUrl, "");
         // console.log(data.hourly.apparent_temperature[3]);
         // For now just do this manipulation here, can move to transformer later if it gets more complicated
         const weatherCode = data.current.weather_code as keyof typeof OpenMeteoCodeToWeatherAPIIcon;
@@ -68,7 +61,9 @@ export const NobsLocation = ({ city, includeState = false, isPinned = false, onP
           ...prevRawData,
           ...{ temp: feelsLike, icon: icon, uv: uv, nextTemp: nextFeelsLike, nextUV: nextUV },
         }));
-      });
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+      }
     } else {
       console.error("Open Meteo API URL is not defined");
     }
@@ -77,19 +72,34 @@ export const NobsLocation = ({ city, includeState = false, isPinned = false, onP
     const openMeteoAQIUrl = process.env.EXPO_PUBLIC_OPEN_METEO_AQI_URL;
     if (openMeteoAQIUrl) {
       const fullUrl = `${openMeteoAQIUrl}/?latitude=${city.location.lat}&longitude=${city.location.lon}&current=us_aqi`;
-      getData(fullUrl, "").then((data) => {
+      try {
+        const data = await getData(fullUrl, "");
         const aqi = data.current.us_aqi;
         setRawData((prevRawData) => ({
           ...prevRawData,
           ...{ aqi: aqi },
         }));
-      });
+      } catch (error) {
+        console.error("Error fetching AQI data:", error);
+      }
     } else {
       console.error("Open Meteo AQI API URL is not defined");
     }
+  };
 
+  const cityText = useMemo(() => {
+    // Abbreviate city if too long
+    let dots = city.name.length > MAX_CITY_NAME_LEN ? ".." : "";
+    let res = city.name.substring(0, MAX_CITY_NAME_LEN) + dots;
+
+    // Append state abbr. if requested
+    return includeState ? `${res}, ${city.stateAbbr}` : res;
+  }, [city]);
+
+  useEffect(() => {
+    fetchWeatherData();
     // console.log(getLoadedFonts());
-  }, []);
+  }, [refreshTrigger]);
 
   if (!rawData || rawData === undefined) {
     return <Text>Loading...</Text>;

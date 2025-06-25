@@ -16,6 +16,7 @@ export default function Index() {
   const [pinnedCity, setPinnedCity] = useState<NobsCity | null>(null);
   const [showHelp, setShowHelp] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const searchInputRef = useRef<TextInput | null>(null);
 
   const insets = useSafeAreaInsets();
@@ -94,6 +95,8 @@ export default function Index() {
   const onRefresh = async () => {
     setRefreshing(true);
     await Promise.all([loadCities(), loadPinnedCity()]);
+    // Trigger weather data refresh by incrementing the refresh trigger
+    setRefreshTrigger((prev) => prev + 1);
     setRefreshing(false);
   };
 
@@ -110,7 +113,7 @@ export default function Index() {
         <ScrollView style={styles.mainScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />}>
           {pinnedCity && (
             <View style={styles.pinnedContainer}>
-              <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} />
+              <NobsLocation isPinned={true} city={pinnedCity} onPin={onRemovePin} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
             </View>
           )}
 
@@ -119,7 +122,7 @@ export default function Index() {
             <View style={styles.citiesContainer}>
               <View style={styles.allCitiesContainer}>
                 {cities.map((city) => (
-                  <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} />
+                  <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
                 ))}
               </View>
             </View>
