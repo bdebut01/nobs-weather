@@ -8,6 +8,7 @@ import OpenMeteoCodeToWeatherAPIIcon from "@/constants/OpenMeteoCodeToWeatherAPI
 import { useCityTime } from "@/hooks/useCityTime";
 import { NobsCity } from "@/types/NobsCity";
 import { colors } from "@/util/colors";
+import WidgetService from "@/services/widgetService";
 
 const initialNobsWeather: NobsWeather = {
   name: "",
@@ -61,6 +62,16 @@ export const NobsLocation = ({ city, includeState = false, isPinned = false, onP
           ...prevRawData,
           ...{ temp: feelsLike, icon: icon, uv: uv, nextTemp: nextFeelsLike, nextUV: nextUV },
         }));
+
+        // Update widget if this is a pinned city
+        if (isPinned) {
+          WidgetService.updateWidgetData({
+            name: city.name,
+            temp: feelsLike,
+            uv: uv,
+            lastUpdated: new Date().toISOString(),
+          });
+        }
       } catch (error) {
         console.error("Error fetching weather data:", error);
       }

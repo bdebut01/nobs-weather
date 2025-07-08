@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,9 +17,37 @@
 		A8E5733C4CB94EC3AEECFF09 /* SixtyfourConvergence-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 193C684C0C524A43A6E80BFE /* SixtyfourConvergence-Regular.ttf */; };
 		AA33C0FB0A054B5F9A34977F /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CDF80293D4C4F04AE34E453 /* noop-file.swift */; };
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
+		B598CE6D2E1C53C50063015A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B598CE6C2E1C53C50063015A /* WidgetKit.framework */; };
+		B598CE6F2E1C53C50063015A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B598CE6E2E1C53C50063015A /* SwiftUI.framework */; };
+		B598CE7A2E1C53C60063015A /* nobs-widgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B598CE6B2E1C53C50063015A /* nobs-widgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B598CE832E1C57120063015A /* RNUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = B598CE822E1C57120063015A /* RNUserDefaults.m */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		FA5D144C9EB878685D4F439E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F5AC2227FB70DD53F6CF301C /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B598CE782E1C53C60063015A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B598CE6A2E1C53C50063015A;
+			remoteInfo = "nobs-widgetExtension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B598CE7B2E1C53C60063015A /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B598CE7A2E1C53C60063015A /* nobs-widgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* nobsweather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nobsweather.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,6 +63,12 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-nobsweather.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nobsweather.release.xcconfig"; path = "Target Support Files/Pods-nobsweather/Pods-nobsweather.release.xcconfig"; sourceTree = "<group>"; };
 		891D0D0089894A72B7E4E02B /* AlumniSansPinstripe-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "AlumniSansPinstripe-Regular.ttf"; path = "../assets/fonts/AlumniSansPinstripe-Regular.ttf"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = nobsweather/SplashScreen.storyboard; sourceTree = "<group>"; };
+		B598CE6B2E1C53C50063015A /* nobs-widgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "nobs-widgetExtension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B598CE6C2E1C53C50063015A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		B598CE6E2E1C53C50063015A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		B598CE802E1C56320063015A /* nobs-widgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "nobs-widgetExtension.entitlements"; sourceTree = "<group>"; };
+		B598CE812E1C57120063015A /* RNUserDefaults.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNUserDefaults.h; sourceTree = "<group>"; };
+		B598CE822E1C57120063015A /* RNUserDefaults.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNUserDefaults.m; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		BEC737A8257A436AA6D212CA /* SpaceMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SpaceMono-Regular.ttf"; path = "../assets/fonts/SpaceMono-Regular.ttf"; sourceTree = "<group>"; };
 		E0055096FBA546FFB11BC516 /* nobsweather-Bridging-Header.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "nobsweather-Bridging-Header.h"; path = "nobsweather/nobsweather-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -43,12 +77,35 @@
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-nobsweather/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B598CE7E2E1C53C60063015A /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B598CE6A2E1C53C50063015A /* nobs-widgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B598CE702E1C53C50063015A /* nobs-widget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (B598CE7E2E1C53C60063015A /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "nobs-widget"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				96905EF65AED1B983A6B3ABC /* libPods-nobsweather.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B598CE682E1C53C50063015A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B598CE6F2E1C53C50063015A /* SwiftUI.framework in Frameworks */,
+				B598CE6D2E1C53C50063015A /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,6 +134,8 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				58EEBF8E8E6FB1BC6CAF49B5 /* libPods-nobsweather.a */,
+				B598CE6C2E1C53C50063015A /* WidgetKit.framework */,
+				B598CE6E2E1C53C50063015A /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -101,8 +160,12 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B598CE812E1C57120063015A /* RNUserDefaults.h */,
+				B598CE822E1C57120063015A /* RNUserDefaults.m */,
+				B598CE802E1C56320063015A /* nobs-widgetExtension.entitlements */,
 				13B07FAE1A68108700A75B9A /* nobsweather */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				B598CE702E1C53C50063015A /* nobs-widget */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
@@ -118,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* nobsweather.app */,
+				B598CE6B2E1C53C50063015A /* nobs-widgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -171,15 +235,39 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				9E53BBA05D4EBAED23AB1E1E /* [CP] Embed Pods Frameworks */,
+				B598CE7B2E1C53C60063015A /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B598CE792E1C53C60063015A /* PBXTargetDependency */,
 			);
 			name = nobsweather;
 			productName = nobsweather;
 			productReference = 13B07F961A680F5B00A75B9A /* nobsweather.app */;
 			productType = "com.apple.product-type.application";
+		};
+		B598CE6A2E1C53C50063015A /* nobs-widgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B598CE7F2E1C53C60063015A /* Build configuration list for PBXNativeTarget "nobs-widgetExtension" */;
+			buildPhases = (
+				B598CE672E1C53C50063015A /* Sources */,
+				B598CE682E1C53C50063015A /* Frameworks */,
+				B598CE692E1C53C50063015A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B598CE702E1C53C50063015A /* nobs-widget */,
+			);
+			name = "nobs-widgetExtension";
+			packageProductDependencies = (
+			);
+			productName = "nobs-widgetExtension";
+			productReference = B598CE6B2E1C53C50063015A /* nobs-widgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -187,10 +275,14 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						LastSwiftMigration = 1250;
+					};
+					B598CE6A2E1C53C50063015A = {
+						CreatedOnToolsVersion = 16.2;
 					};
 				};
 			};
@@ -208,6 +300,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* nobsweather */,
+				B598CE6A2E1C53C50063015A /* nobs-widgetExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -224,6 +317,13 @@
 				A8E5733C4CB94EC3AEECFF09 /* SixtyfourConvergence-Regular.ttf in Resources */,
 				2CC4F5DABF534D44970D094C /* AlumniSansPinstripe-Regular.ttf in Resources */,
 				FA5D144C9EB878685D4F439E /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B598CE692E1C53C50063015A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -353,12 +453,28 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				B598CE832E1C57120063015A /* RNUserDefaults.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				AA33C0FB0A054B5F9A34977F /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B598CE672E1C53C50063015A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B598CE792E1C53C60063015A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B598CE6A2E1C53C50063015A /* nobs-widgetExtension */;
+			targetProxy = B598CE782E1C53C60063015A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
@@ -552,6 +668,95 @@
 			};
 			name = Release;
 		};
+		B598CE7C2E1C53C60063015A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "nobs-widgetExtension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = CKVS3H854L;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "nobs-widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "nobs-widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "nobsweather.nobs-widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B598CE7D2E1C53C60063015A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "nobs-widgetExtension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = CKVS3H854L;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "nobs-widget/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "nobs-widget";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "nobsweather.nobs-widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -569,6 +774,15 @@
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
 				83CBBA211A601CBA00E9B192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B598CE7F2E1C53C60063015A /* Build configuration list for PBXNativeTarget "nobs-widgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B598CE7C2E1C53C60063015A /* Debug */,
+				B598CE7D2E1C53C60063015A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

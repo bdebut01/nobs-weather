@@ -114,53 +114,41 @@ export default function Index() {
         <ScrollView style={styles.outerScrollView} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor="#fff" colors={["#fff"]} progressBackgroundColor={colors.DEPTH_TWO} />} scrollEnabled={true} nestedScrollEnabled={true}>
           {pinnedCity && (
             <View style={styles.pinnedContainer}>
+              <Text style={styles.pinnedTitle}>📌 PINNED</Text>
               <NobsLocation city={pinnedCity} includeState={false} isPinned={true} onPin={onRemovePin} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
             </View>
           )}
 
-          {cities.length > 0 ? (
-            <View style={styles.citiesScrollContainer}>
-              <ScrollView style={styles.citiesScrollView} nestedScrollEnabled={true} showsVerticalScrollIndicator={true} scrollEventThrottle={16}>
-                <View style={styles.citiesContainer}>
-                  <View style={styles.allCitiesContainer}>
-                    {cities.map((city) => (
-                      <NobsLocation key={`${city.name}-${city.stateAbbr}`} city={city} onPin={onPinCity} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
-                    ))}
-                  </View>
-                </View>
-              </ScrollView>
-            </View>
-          ) : !pinnedCity ? (
-            <View style={styles.emptyStateContainer}>
-              <Text style={styles.emptyStateText}>Add a city using the + button!</Text>
-            </View>
-          ) : null}
+          <View style={styles.grid}>
+            {cities.map((city, index) => (
+              <NobsLocation key={index} city={city} includeState={false} isPinned={false} onPin={onPinCity} onDelete={onDeleteCity} refreshTrigger={refreshTrigger} />
+            ))}
+          </View>
         </ScrollView>
       </View>
 
+      {/* Help Modal */}
       <Modal animationType="fade" transparent={true} visible={showHelp} onRequestClose={() => setShowHelp(false)}>
-        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setShowHelp(false)}>
+        <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Image source={require("../assets/images/explainer.png")} style={styles.explainerImage} resizeMode="contain" />
+            <TouchableOpacity style={styles.closeButton} onPress={() => setShowHelp(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
 
       {/* Search Modal */}
       <Modal animationType="slide" transparent={true} visible={showSearchModal} onRequestClose={() => setShowSearchModal(false)}>
-        <TouchableOpacity style={styles.searchModalOverlay} activeOpacity={1} onPress={() => setShowSearchModal(false)}>
-          <TouchableOpacity style={styles.searchModalContent} activeOpacity={1} onPress={() => {}}>
-            <View style={styles.searchModalHeader}>
-              <Text style={styles.searchModalTitle}>Add a City</Text>
-              <TouchableOpacity onPress={() => setShowSearchModal(false)} style={styles.closeButton}>
-                <Text style={styles.closeButtonText}>✕</Text>
-              </TouchableOpacity>
-            </View>
-            <SafeAreaView style={styles.fullWidth}>
-              <CitySearch onCitySelected={addCityToWheel} ref={searchInputRef} />
-            </SafeAreaView>
-          </TouchableOpacity>
-        </TouchableOpacity>
+        <View style={styles.searchModalOverlay}>
+          <View style={styles.searchModalContent}>
+            <TouchableOpacity style={styles.searchModalCloseButton} onPress={() => setShowSearchModal(false)}>
+              <Text style={styles.searchModalCloseText}>✕</Text>
+            </TouchableOpacity>
+            <CitySearch ref={searchInputRef} onCitySelected={addCityToWheel} />
+          </View>
+        </View>
       </Modal>
 
       {/* Floating Plus Button */}
@@ -213,170 +201,117 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 15,
+    marginBottom: 20,
   },
-  mainScrollView: {
-    flex: 1,
-    width: "100%",
+  pinnedTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.DEPTH_ZERO,
+    marginBottom: 10,
+    textAlign: "center",
   },
-  citiesScrollContainer: {
-    flex: 1,
-    minHeight: 200, // Minimum height to ensure scrolling works
-  },
-  citiesScrollView: {
-    flex: 1,
-    maxHeight: 400, // Maximum height to constrain the scroll area
-  },
-  citiesContainer: {
-    width: "90%",
-    alignSelf: "center",
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    marginBottom: 20, // Reduced since we no longer have the search bar
-    paddingTop: 20,
-    shadowColor: "#fff",
-    shadowOffset: { width: -1, height: -2 },
-    backgroundColor: "rgba(255, 255, 255, .2)",
-  },
-  allCitiesContainer: {
+  grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
-    justifyContent: "center",
-    paddingBottom: 20,
+    justifyContent: "space-around",
+    paddingHorizontal: 10,
+    paddingBottom: 50,
   },
-  // Floating Button Styles
+  helpButton: {
+    position: "absolute",
+    right: 15,
+    top: 10,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  helpButtonText: {
+    fontSize: 16,
+    color: "#fff",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    width: "90%",
+    maxHeight: "80%",
+    alignItems: "center",
+  },
+  explainerImage: {
+    width: "100%",
+    height: 400,
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: colors.DEPTH_TWO,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+  searchModalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+  },
+  searchModalContent: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    minHeight: 300,
+    position: "relative",
+  },
+  searchModalCloseButton: {
+    position: "absolute",
+    top: 15,
+    right: 15,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1,
+  },
+  searchModalCloseText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+  },
+  searchInput: {
+    marginTop: 40,
+  },
   floatingButton: {
     position: "absolute",
     right: 20,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     backgroundColor: colors.DEPTH_TWO,
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
-    zIndex: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   plusIcon: {
     fontSize: 24,
     color: "#fff",
     fontWeight: "300",
-    textAlign: "center",
-    lineHeight: 24,
-  },
-  // Search Modal Styles
-  searchModalOverlay: {
-    flex: 1,
-    justifyContent: "flex-end",
-  },
-  searchModalContent: {
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 20,
-    paddingBottom: 300,
-    maxHeight: "80%",
-  },
-  searchModalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  searchModalTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "#f0f0f0",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  closeButtonText: {
-    fontSize: 18,
-    color: "#666",
-    fontWeight: "bold",
-  },
-  fullWidth: {
-    width: "100%", // Ensures CitySearch takes full width
-  },
-  helpButton: {
-    position: "absolute",
-    top: 6, // Center vertically in header (44 - 32) / 2
-    right: 18,
-    zIndex: 5,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: colors.DEPTH_TWO,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 3,
-  },
-  helpButtonText: {
-    fontSize: 16,
-    color: "#fff",
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    width: "100%",
-    maxHeight: "100%",
-    backgroundColor: "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  explainerImage: {
-    width: "75%",
-    height: undefined,
-    aspectRatio: 1,
-  },
-  emptyStateContainer: {
-    width: "90%",
-    alignSelf: "center",
-    paddingVertical: 40,
-    marginBottom: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    borderRadius: 15,
-    padding: 30,
-    shadowColor: "#fff",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-  },
-  emptyStateText: {
-    color: "#fff",
-    fontSize: 18,
-    textAlign: "center",
-    fontWeight: "500",
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
 });
