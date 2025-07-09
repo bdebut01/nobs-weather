@@ -147,7 +147,7 @@ struct nobs_widgetEntryView : View {
     }
     
     private var rectangularView: some View {
-        VStack(spacing: 4) {
+        VStack(spacing: 3) {
             // City name
             Text(entry.weatherData.name)
                 .font(.caption)
@@ -161,7 +161,7 @@ struct nobs_widgetEntryView : View {
                     .font(.caption2)
                     .foregroundColor(.orange)
                 Text("\(entry.weatherData.temp)°")
-                    .font(.title2)
+                    .font(.headline)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
             }
@@ -176,9 +176,32 @@ struct nobs_widgetEntryView : View {
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
             }
+            
+            // Last updated
+            Text(timeAgoString(from: entry.weatherData.lastUpdated))
+                .font(.caption2)
+                .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
+    }
+    
+    private func timeAgoString(from date: Date) -> String {
+        let now = Date()
+        let interval = now.timeIntervalSince(date)
+        
+        if interval < 60 {
+            return "Just now"
+        } else if interval < 3600 {
+            let minutes = Int(interval / 60)
+            return "\(minutes)m ago"
+        } else if interval < 86400 {
+            let hours = Int(interval / 3600)
+            return "\(hours)h ago"
+        } else {
+            let days = Int(interval / 86400)
+            return "\(days)d ago"
+        }
     }
 }
 

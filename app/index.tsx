@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Keyboard, Modal, Image, RefreshControl } from "react-native";
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Modal, Image, RefreshControl } from "react-native";
 import { useEffect, useState, useRef } from "react";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -7,6 +7,7 @@ import CitySearch from "@/components/CitySearch";
 import { NobsCity } from "@/types/NobsCity";
 import StorageService from "@/services/storageService";
 import WidgetService from "@/services/widgetService";
+import { BackgroundService } from "@/services/backgroundService";
 import { citiesAreEqual } from "@/util/citiesAreEqual";
 import { colors } from "@/util/colors";
 import { TextInput } from "react-native-gesture-handler";
@@ -25,6 +26,8 @@ export default function Index() {
   useEffect(() => {
     loadCities();
     loadPinnedCity();
+    // Initialize background service
+    BackgroundService.registerBackgroundFetch();
   }, []);
 
   useEffect(() => {

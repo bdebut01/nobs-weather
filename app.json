@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.nobs.weather"
+      "bundleIdentifier": "com.anonymous.nobs.weather",
+      "infoPlist": {
+        "UIBackgroundModes": ["background-processing", "background-fetch", "fetch"]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -26,6 +29,8 @@
     },
     "plugins": [
       "expo-router",
+      "expo-background-fetch",
+      "expo-task-manager",
       [
         "expo-splash-screen",
         {
