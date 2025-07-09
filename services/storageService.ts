@@ -2,6 +2,7 @@ import { NobsCity } from "@/types/NobsCity";
 import { citiesAreEqual } from "@/util/citiesAreEqual";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { cityService } from "./cityService";
+import WidgetService from "./widgetService";
 
 const STORAGE_KEY = "savedCities";
 
@@ -44,6 +45,9 @@ export default class StorageService {
           return c;
         });
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCities));
+
+        // Also save to SharedUserDefaults for widget access
+        await WidgetService.updatePinnedCity(city);
       } else {
         // Remove pin from all
         const cities = await this.getSavedCities();
@@ -52,6 +56,9 @@ export default class StorageService {
           return c;
         });
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedCities));
+
+        // Clear pinned city from widget
+        await WidgetService.updatePinnedCity(null);
       }
     } catch (error) {
       console.error("Error setting pinned city: ", error);

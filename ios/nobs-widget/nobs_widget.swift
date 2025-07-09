@@ -36,6 +36,29 @@ struct WeatherData: Codable {
     )
 }
 
+struct PinnedCityData: Codable {
+    let name: String
+    let stateAbbr: String
+    let location: LocationData
+    let timezone: String
+    let isPinned: Bool
+}
+
+struct LocationData: Codable {
+    let lat: Double
+    let lon: Double
+}
+
+// Open-Meteo API Response structures
+struct OpenMeteoResponse: Codable {
+    let current: CurrentWeather
+}
+
+struct CurrentWeather: Codable {
+    let apparent_temperature: Double
+    let uv_index: Double
+}
+
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> WeatherEntry {
         print("[Widget] placeholder called")
@@ -44,23 +67,38 @@ struct Provider: TimelineProvider {
 
     func getSnapshot(in context: Context, completion: @escaping (WeatherEntry) -> ()) {
         print("[Widget] getSnapshot called")
-        let weatherData = loadWeatherData() ?? WeatherData.noData
-        let entry = WeatherEntry(date: Date(), weatherData: weatherData)
+        
+        // For snapshots, try to load cached data first
+        if let cachedData = loadCachedWeatherData() {
+            let entry = WeatherEntry(date: Date(), weatherData: cachedData)
+            completion(entry)
+            return
+        }
+        
+        // If no cached data, use placeholder
+        let entry = WeatherEntry(date: Date(), weatherData: WeatherData.placeholder)
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         print("[Widget] getTimeline called")
-        let weatherData = loadWeatherData() ?? WeatherData.noData
-        let entry = WeatherEntry(date: Date(), weatherData: weatherData)
-
-        // Refresh every 10 minutes
-        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 10, to: Date())!
-        let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
-        completion(timeline)
+        
+        // Try to fetch fresh data
+        Task {
+            let weatherData = await fetchFreshWeatherData()
+            let entry = WeatherEntry(date: Date(), weatherData: weatherData)
+            
+            // Schedule next update in 15 minutes (Apple's recommended minimum for widgets)
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date())!
+            let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
+            
+            await MainActor.run {
+                completion(timeline)
+            }
+        }
     }
     
-    private func loadWeatherData() -> WeatherData? {
+    private func loadCachedWeatherData() -> WeatherData? {
         guard let sharedContainer = UserDefaults(suiteName: "group.com.anonymous.nobs.weather") else {
             return nil
         }
@@ -95,6 +133,92 @@ struct Provider: TimelineProvider {
             }
             
             return nil
+        }
+    }
+    
+    private func loadPinnedCity() -> PinnedCityData? {
+        guard let sharedContainer = UserDefaults(suiteName: "group.com.anonymous.nobs.weather") else {
+            print("[Widget] Failed to access shared container")
+            return nil
+        }
+        
+        guard let data = sharedContainer.data(forKey: "pinnedCity") else {
+            print("[Widget] No pinned city data found")
+            return nil
+        }
+        
+        let decoder = JSONDecoder()
+        do {
+            return try decoder.decode(PinnedCityData.self, from: data)
+        } catch {
+            print("[Widget] Failed to decode pinned city: \(error)")
+            return nil
+        }
+    }
+    
+    private func fetchFreshWeatherData() async -> WeatherData {
+        // First try to get the pinned city
+        guard let pinnedCity = loadPinnedCity() else {
+            print("[Widget] No pinned city available")
+            return loadCachedWeatherData() ?? WeatherData.noData
+        }
+        
+        // Construct the Open-Meteo API URL
+        let urlString = "https://api.open-meteo.com/v1/forecast?latitude=\(pinnedCity.location.lat)&longitude=\(pinnedCity.location.lon)&current=apparent_temperature,uv_index&temperature_unit=fahrenheit&timezone=America%2FNew_York"
+        
+        guard let url = URL(string: urlString) else {
+            print("[Widget] Invalid URL")
+            return loadCachedWeatherData() ?? WeatherData.noData
+        }
+        
+        do {
+            print("[Widget] Fetching fresh weather data from: \(urlString)")
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            let decoder = JSONDecoder()
+            let response = try decoder.decode(OpenMeteoResponse.self, from: data)
+            
+            let temp = Int(response.current.apparent_temperature.rounded())
+            let uv = Int(response.current.uv_index.rounded())
+            
+            let freshData = WeatherData(
+                name: pinnedCity.name,
+                temp: temp,
+                uv: uv,
+                lastUpdated: Date()
+            )
+            
+            // Cache the fresh data for the app to use
+            saveCachedWeatherData(freshData)
+            
+            print("[Widget] Successfully fetched fresh weather data: \(temp)°, UV \(uv)")
+            return freshData
+            
+        } catch {
+            print("[Widget] Failed to fetch weather data: \(error)")
+            // Fall back to cached data if available
+            return loadCachedWeatherData() ?? WeatherData.noData
+        }
+    }
+    
+    private func saveCachedWeatherData(_ weatherData: WeatherData) {
+        guard let sharedContainer = UserDefaults(suiteName: "group.com.anonymous.nobs.weather") else {
+            return
+        }
+        
+        let encoder = JSONEncoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        encoder.dateEncodingStrategy = .formatted(formatter)
+        
+        do {
+            let data = try encoder.encode(weatherData)
+            sharedContainer.set(data, forKey: "pinnedCityWeather")
+            print("[Widget] Cached fresh weather data")
+        } catch {
+            print("[Widget] Failed to cache weather data: \(error)")
         }
     }
 }

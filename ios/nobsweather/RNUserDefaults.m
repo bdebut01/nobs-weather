@@ -33,4 +33,26 @@ RCT_EXPORT_METHOD(setSharedData:(NSString *)suiteName
     }
 }
 
+RCT_EXPORT_METHOD(removeSharedData:(NSString *)suiteName
+                  key:(NSString *)key
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    @try {
+        NSUserDefaults *sharedDefaults = [[NSUserDefaults alloc] initWithSuiteName:suiteName];
+        if (!sharedDefaults) {
+            reject(@"error", @"Failed to create shared defaults", nil);
+            return;
+        }
+        
+        [sharedDefaults removeObjectForKey:key];
+        [sharedDefaults synchronize];
+        
+        resolve(@YES);
+    }
+    @catch (NSException *exception) {
+        reject(@"error", @"Failed to remove shared data", nil);
+    }
+}
+
 @end
