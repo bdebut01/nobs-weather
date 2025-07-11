@@ -28,17 +28,10 @@ class WidgetService {
         const { RNUserDefaults } = NativeModules;
         if (RNUserDefaults && RNUserDefaults.setSharedData) {
           if (city) {
-            await RNUserDefaults.setSharedData(
-              "group.com.anonymous.nobs.weather", 
-              "pinnedCity", 
-              JSON.stringify(city)
-            );
+            await RNUserDefaults.setSharedData("group.com.anonymous.nobs.weather", "pinnedCity", JSON.stringify(city));
             console.log("[WidgetService] Saved pinned city to widget:", city.name);
           } else {
-            await RNUserDefaults.removeSharedData(
-              "group.com.anonymous.nobs.weather", 
-              "pinnedCity"
-            );
+            await RNUserDefaults.removeSharedData("group.com.anonymous.nobs.weather", "pinnedCity");
             console.log("[WidgetService] Removed pinned city from widget");
           }
         }

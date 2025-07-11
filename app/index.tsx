@@ -7,7 +7,6 @@ import CitySearch from "@/components/CitySearch";
 import { NobsCity } from "@/types/NobsCity";
 import StorageService from "@/services/storageService";
 import WidgetService from "@/services/widgetService";
-import { BackgroundService } from "@/services/backgroundService";
 import { citiesAreEqual } from "@/util/citiesAreEqual";
 import { colors } from "@/util/colors";
 import { TextInput } from "react-native-gesture-handler";
@@ -26,8 +25,6 @@ export default function Index() {
   useEffect(() => {
     loadCities();
     loadPinnedCity();
-    // Initialize background service
-    BackgroundService.registerBackgroundFetch();
   }, []);
 
   useEffect(() => {
@@ -58,13 +55,16 @@ export default function Index() {
   const onPinCity = async (city: NobsCity) => {
     await StorageService.setPinnedCity(city);
     setPinnedCity(city);
+
+    // Update the pinned city for the widget
+    await WidgetService.updatePinnedCity(city);
   };
 
   const onRemovePin = async () => {
     await StorageService.setPinnedCity(null);
     setPinnedCity(null);
     // Clear widget data when no city is pinned
-    WidgetService.updateWidgetData({
+    await WidgetService.updateWidgetData({
       name: "No pinned city",
       temp: 0,
       uv: 0,
@@ -77,7 +77,7 @@ export default function Index() {
     if (pinnedCity && citiesAreEqual(pinnedCity, city)) {
       setPinnedCity(null);
       // Clear widget data when pinned city is deleted
-      WidgetService.updateWidgetData({
+      await WidgetService.updateWidgetData({
         name: "No pinned city",
         temp: 0,
         uv: 0,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingHorizontal: 20,
     paddingBottom: 300,
-    maxHeight: "80%",
+    height: 650,
   },
   searchModalHeader: {
     flexDirection: "row",

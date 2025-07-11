@@ -1,13 +1,64 @@
-import * as BackgroundFetch from "expo-background-fetch";
-import * as TaskManager from "expo-task-manager";
+import { Platform } from "react-native";
 import StorageService from "./storageService";
 import { weatherService } from "./api/weatherService";
 import WidgetService from "./widgetService";
 
 const BACKGROUND_FETCH_TASK = "background-fetch-weather";
 
-// Define the background task
-TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
+// Check if we're running in a simulator - do this first before any other imports
+const isSimulator = () => {
+  if (Platform.OS === "ios") {
+    // On iOS, check if it's a simulator by checking constants
+    // Real devices have different constants than simulators
+    try {
+      const Constants = require("expo-constants").default;
+      return Constants.platform?.ios?.simulator || false;
+    } catch {
+      // If expo-constants fails, assume simulator for safety
+      return true;
+    }
+  }
+
+  if (Platform.OS === "android") {
+    // On Android, check if it's an emulator
+    try {
+      const Constants = require("expo-constants").default;
+      return Constants.platform?.android?.isEmulator || false;
+    } catch {
+      // If expo-constants fails, assume emulator for safety
+      return true;
+    }
+  }
+
+  return false;
+};
+
+// Immediately check if we should skip everything
+const SKIP_BACKGROUND_FETCH = isSimulator();
+
+// Check if background fetch is available
+const isBackgroundFetchAvailable = () => {
+  // Skip background fetch in simulator
+  if (SKIP_BACKGROUND_FETCH) {
+    console.log("[Background] Skipping background fetch in simulator");
+    return false;
+  }
+
+  try {
+    // Only try to require the modules if we're not in simulator
+    const BackgroundFetch = require("expo-background-fetch");
+    const TaskManager = require("expo-task-manager");
+    return BackgroundFetch && TaskManager;
+  } catch (error) {
+    console.warn("[Background] Background fetch not available:", error);
+    return false;
+  }
+};
+
+// Define the background task function
+const backgroundTaskHandler = async () => {
+  const BackgroundFetch = require("expo-background-fetch");
+
   try {
     console.log("[Background] Starting background weather update...");
 
@@ -53,11 +104,32 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
     console.error("[Background] Background fetch failed:", error);
     return BackgroundFetch.BackgroundFetchResult.Failed;
   }
-});
+};
 
 export class BackgroundService {
   static async registerBackgroundFetch() {
     try {
+      // Check if background fetch is available (this also checks for simulator)
+      if (SKIP_BACKGROUND_FETCH || !isBackgroundFetchAvailable()) {
+        console.log("[Background] Background fetch not available, skipping registration");
+        return;
+      }
+
+      const BackgroundFetch = require("expo-background-fetch");
+      const TaskManager = require("expo-task-manager");
+
+      // Define the task only when we're about to register it
+      TaskManager.defineTask(BACKGROUND_FETCH_TASK, backgroundTaskHandler);
+
+      // Check current status first
+      const status = await BackgroundFetch.getStatusAsync();
+      console.log("[Background] Current status:", status);
+
+      if (status === BackgroundFetch.BackgroundFetchStatus.Denied) {
+        console.log("[Background] Background fetch is denied");
+        return;
+      }
+
       // Register the background fetch task
       await BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
         minimumInterval: 15 * 60, // 15 minutes minimum (iOS enforces this)
@@ -73,6 +145,12 @@ export class BackgroundService {
 
   static async unregisterBackgroundFetch() {
     try {
+      if (SKIP_BACKGROUND_FETCH || !isBackgroundFetchAvailable()) {
+        console.log("[Background] Background fetch not available, skipping unregistration");
+        return;
+      }
+
+      const BackgroundFetch = require("expo-background-fetch");
       await BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
       console.log("[Background] Background fetch unregistered");
     } catch (error) {
@@ -81,7 +159,16 @@ export class BackgroundService {
   }
 
   static async getBackgroundFetchStatus() {
-    const status = await BackgroundFetch.getStatusAsync();
-    return status;
+    try {
+      if (SKIP_BACKGROUND_FETCH || !isBackgroundFetchAvailable()) {
+        return null;
+      }
+      const BackgroundFetch = require("expo-background-fetch");
+      const status = await BackgroundFetch.getStatusAsync();
+      return status;
+    } catch (error) {
+      console.error("[Background] Failed to get background fetch status:", error);
+      return null;
+    }
   }
 }

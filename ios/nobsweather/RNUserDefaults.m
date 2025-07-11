@@ -5,6 +5,11 @@
 
 #import "RNUserDefaults.h"
 
+// Only import WidgetKit if available (not in simulator)
+#if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
+#import <WidgetKit/WidgetKit.h>
+#endif
+
 @implementation RNUserDefaults
 
 RCT_EXPORT_MODULE();
@@ -52,6 +57,29 @@ RCT_EXPORT_METHOD(removeSharedData:(NSString *)suiteName
     }
     @catch (NSException *exception) {
         reject(@"error", @"Failed to remove shared data", nil);
+    }
+}
+
+RCT_EXPORT_METHOD(reloadAllTimelines:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    @try {
+#if TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR
+        if (@available(iOS 14.0, *)) {
+            WidgetCenter *center = [WidgetCenter sharedCenter];
+            [center reloadAllTimelines];
+            resolve(@YES);
+        } else {
+            reject(@"error", @"WidgetKit not available on this iOS version", nil);
+        }
+#else
+        // In simulator, just resolve successfully without doing anything
+        NSLog(@"[RNUserDefaults] Widget reload skipped in simulator");
+        resolve(@YES);
+#endif
+    }
+    @catch (NSException *exception) {
+        reject(@"error", @"Failed to reload widget timelines", nil);
     }
 }
 

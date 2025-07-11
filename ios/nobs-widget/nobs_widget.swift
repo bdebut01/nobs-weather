@@ -85,11 +85,14 @@ struct Provider: TimelineProvider {
         
         // Try to fetch fresh data
         Task {
+            let fetchTime = Date()
             let weatherData = await fetchFreshWeatherData()
-            let entry = WeatherEntry(date: Date(), weatherData: weatherData)
             
-            // Schedule next update in 15 minutes (Apple's recommended minimum for widgets)
-            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date())!
+            // Create a single timeline entry
+            let entry = WeatherEntry(date: fetchTime, weatherData: weatherData)
+            
+            // Schedule next fetch in 15 minutes
+            let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: fetchTime)!
             let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))
             
             await MainActor.run {
@@ -173,6 +176,7 @@ struct Provider: TimelineProvider {
         
         do {
             print("[Widget] Fetching fresh weather data from: \(urlString)")
+            let fetchTime = Date()
             let (data, _) = try await URLSession.shared.data(from: url)
             
             let decoder = JSONDecoder()
@@ -185,7 +189,7 @@ struct Provider: TimelineProvider {
                 name: pinnedCity.name,
                 temp: temp,
                 uv: uv,
-                lastUpdated: Date()
+                lastUpdated: fetchTime
             )
             
             // Cache the fresh data for the app to use
@@ -285,7 +289,7 @@ struct nobs_widgetEntryView : View {
                     .font(.caption2)
                     .foregroundColor(.orange)
                 Text("\(entry.weatherData.temp)°")
-                    .font(.headline)
+                    .font(.title3)
                     .fontWeight(.bold)
                     .foregroundColor(.primary)
             }
@@ -300,32 +304,9 @@ struct nobs_widgetEntryView : View {
                     .fontWeight(.medium)
                     .foregroundColor(.primary)
             }
-            
-            // Last updated
-            Text(timeAgoString(from: entry.weatherData.lastUpdated))
-                .font(.caption2)
-                .foregroundColor(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-    }
-    
-    private func timeAgoString(from date: Date) -> String {
-        let now = Date()
-        let interval = now.timeIntervalSince(date)
-        
-        if interval < 60 {
-            return "Just now"
-        } else if interval < 3600 {
-            let minutes = Int(interval / 60)
-            return "\(minutes)m ago"
-        } else if interval < 86400 {
-            let hours = Int(interval / 3600)
-            return "\(hours)h ago"
-        } else {
-            let days = Int(interval / 86400)
-            return "\(days)d ago"
-        }
     }
 }
 
